@@ -1,30 +1,41 @@
-// utils/sendEmail.js
-const Brevo = require("@getbrevo/brevo");
-require("dotenv").config();
+// config/mailer.js
+const axios = require("axios");
 
-const apiInstance = new Brevo.TransactionalEmailsApi();
-
-// Set API key
-apiInstance.setApiKey(
-  Brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+const brevo = axios.create({
+  baseURL: "https://api.brevo.com/v3",
+  headers: {
+    "api-key": process.env.BREVO_API_KEY,
+    "Content-Type": "application/json",
+    accept: "application/json",
+  },
+});
 
 const sendEmail = async (to, subject, htmlContent) => {
   try {
-    const sendSmtpEmail = new Brevo.SendSmtpEmail();
-    sendSmtpEmail.subject = subject;
-    sendSmtpEmail.htmlContent = htmlContent;
-    sendSmtpEmail.sender = {
-      email: process.env.EMAIL_SENDER,
-      name: "PrintedTeez",
-    };
-    sendSmtpEmail.to = [{ email: to }];
+    if (!process.env.BREVO_API_KEY) {
+      throw new Error("BREVO_API_KEY missing");
+    }
 
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log(`Email sent successfully to ${to}`);
+    if (!process.env.EMAIL_SENDER) {
+      throw new Error("EMAIL_SENDER missing");
+    }
+
+    await brevo.post("/smtp/email", {
+      sender: {
+        email: process.env.EMAIL_SENDER,
+        name: "PrintedTeez",
+      },
+      to: [{ email: to }],
+      subject,
+      htmlContent,
+    });
+
+    console.log(`✅ Email sent to ${to}`);
   } catch (error) {
-    console.error("Brevo Email Error:", error.message || error);
+    console.error(
+      "❌ Brevo Email Error:",
+      error?.response?.data || error.message
+    );
   }
 };
 
