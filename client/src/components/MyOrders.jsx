@@ -39,7 +39,7 @@ const MyOrders = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-black dark:to-slate-950">
+    <div className="min-h-screen bg-linear-to-b from-white to-gray-50 dark:from-black dark:to-slate-950">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-gray-900 dark:text-gray-100">
         {/* HEADER */}
         <div className="flex items-center justify-between mb-6">
@@ -157,7 +157,7 @@ const MyOrders = () => {
                         <img
                           src={itemImage}
                           alt={itemName}
-                          className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg object-cover border border-gray-200 dark:border-slate-700 flex-shrink-0"
+                          className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg object-cover border border-gray-200 dark:border-slate-700 shrink-0"
                         />
                       )}
 

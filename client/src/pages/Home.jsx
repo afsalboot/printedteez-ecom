@@ -26,28 +26,38 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const loadData = () => {
-      dispatch(fetchFeaturedProducts());
-      dispatch(fetchTrendingProducts());
-      dispatch(fetchNewArrivals());
-      dispatch(fetchBestSellers());
-      dispatch(fetchFlashSaleProducts());
-      dispatch(fetchLimitedEditionProducts());
-      dispatch(fetchDeals());
-      dispatch(fetchCategories());
-    };
-
-    loadData();
+    dispatch(fetchFeaturedProducts());
+    dispatch(fetchTrendingProducts());
+    dispatch(fetchNewArrivals());
+    dispatch(fetchBestSellers());
+    dispatch(fetchFlashSaleProducts());
+    dispatch(fetchLimitedEditionProducts());
+    dispatch(fetchDeals());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   return (
-    <main className="bg-linear-to-b from-white to-gray-50 dark:from-black dark:to-neutral-900 text-gray-900 dark:text-gray-100 min-h-screen">
-      {/* Fullscreen Hero stays edge-to-edge */}
+    <main
+      className="
+        min-h-screen
+        bg-linear-to-b from-white to-gray-50
+        dark:from-black dark:to-neutral-900
+        text-gray-900 dark:text-gray-100
+      "
+    >
+      {/* HERO → Full width always */}
       <HeroSection />
 
-      {/* Main content container */}
-      <div className="max-w-7xl mx-auto px-4 pb-20">
-        <div className="space-y-16 md:space-y-20">
+      {/* CONTENT CONTAINER */}
+      <div
+        className="
+          max-w-7xl mx-auto
+          px-3 sm:px-4 md:px-6
+          pb-16 sm:pb-20
+        "
+      >
+        {/* SECTION SPACING */}
+        <div className="space-y-14 sm:space-y-16 md:space-y-20">
           <CategorySection />
           <FlashSaleSection />
           <FeaturedSection />

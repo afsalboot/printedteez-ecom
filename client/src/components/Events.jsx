@@ -9,7 +9,7 @@ const Events = () => {
       <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
 
         {/* Event Banner */}
-        <div className="w-full h-64 bg-gradient-to-r from-[#B21A15] to-red-700 text-white rounded-2xl flex flex-col justify-center items-center shadow-lg relative overflow-hidden">
+        <div className="w-full h-64 bg-linear-to-r from-[#B21A15] to-red-700 text-white rounded-2xl flex flex-col justify-center items-center shadow-lg relative overflow-hidden">
           {/* Accent Glow */}
           <div className="absolute inset-0 bg-white/10 blur-2xl rounded-full -top-10" />
 
