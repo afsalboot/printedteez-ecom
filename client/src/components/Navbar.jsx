@@ -37,18 +37,16 @@ const Navbar = () => {
     }
   }, [user, dispatch]);
 
-  // Search (desktop + mobile)
   useEffect(() => {
     if (!searchQuery.trim()) {
       dispatch(clearSuggestions());
       return;
     }
-
-    const timer = setTimeout(() => {
-      dispatch(fetchSuggestions(searchQuery));
-    }, 300);
-
-    return () => clearTimeout(timer);
+    const t = setTimeout(
+      () => dispatch(fetchSuggestions(searchQuery)),
+      300
+    );
+    return () => clearTimeout(t);
   }, [searchQuery, dispatch]);
 
   const handleSelectProduct = (id) => {
@@ -58,61 +56,78 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
-  // Swipe down to close mobile menu
   const handleTouchStart = (e) => setTouchStartY(e.touches[0].clientY);
   const handleTouchMove = (e) => setTouchEndY(e.touches[0].clientY);
   const handleTouchEnd = () => {
-    if (touchEndY - touchStartY > 80) {
-      setMobileMenuOpen(false);
-    }
+    if (touchEndY - touchStartY > 80) setMobileMenuOpen(false);
   };
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
+    return () => (document.body.style.overflow = "auto");
+  }, [mobileMenuOpen]);
 
   return (
     <div className="w-full">
       {/* NAVBAR */}
       <nav className="w-full h-[70px] bg-[#B21A15] text-white shadow-md">
-        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
-          {/* MOBILE HAMBURGER */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu size={26} />
-          </button>
+        <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between relative">
+          {/* LEFT */}
+          <div className="flex items-center gap-3">
+            <button
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu size={26} />
+            </button>
 
-          {/* LOGO */}
-          <Link to="/" className="h-10 flex items-center">
-            <img src={logo} alt="logo" className="h-full" />
-          </Link>
+            <Link to="/" className="h-10 flex items-center">
+              <img src={logo} alt="logo" className="h-full" />
+            </Link>
+          </div>
 
-          {/* DESKTOP CONTENT */}
-          <div className="hidden md:flex items-center gap-6 w-full justify-end">
-            {/* LINKS */}
-            <ul className="flex items-center gap-6 text-sm font-medium">
-              <NavLink to="/">Home</NavLink>
-              <NavLink to="/shop">Shop</NavLink>
-              <NavLink to="/event">Event</NavLink>
-              <NavLink to="/blog">Blog</NavLink>
-              <NavLink to="/about">About</NavLink>
-              <NavLink to="/contact">Contact</NavLink>
-            </ul>
+          {/* CENTER NAV (DESKTOP) */}
+          <ul className="hidden md:flex items-center gap-8 text-sm font-medium absolute left-1/2 -translate-x-1/2">
+            {[
+              { to: "/", label: "Home" },
+              { to: "/shop", label: "Shop" },
+              { to: "/event", label: "Event" },
+              { to: "/blog", label: "Blog" },
+              { to: "/about", label: "About" },
+              { to: "/contact", label: "Contact" },
+            ].map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `relative pb-1 transition-all
+                   after:absolute after:left-0 after:-bottom-0.5
+                   after:h-[2px] after:bg-white after:transition-all
+                   ${isActive ? "after:w-full" : "after:w-0"}
+                   hover:after:w-full`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </ul>
 
+          {/* RIGHT (DESKTOP) */}
+          <div className="hidden md:flex items-center gap-5">
             {/* SEARCH */}
             <div className="relative">
-              <div className="flex items-center bg-white/20 rounded-lg px-3 py-2">
+              <div className="flex items-center bg-white/15 rounded-full px-4 py-2">
                 <Search size={16} />
                 <input
-                  type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products"
-                  className="bg-transparent outline-none text-sm ml-2 w-44 placeholder:text-white/70"
+                  className="bg-transparent outline-none text-sm ml-2 w-48 placeholder:text-white/70"
                 />
               </div>
 
-              {/* SUGGESTIONS */}
               {suggestions.length > 0 && (
-                <div className="absolute top-full mt-2 w-64 bg-white text-black rounded-xl shadow-lg overflow-hidden z-50">
+                <div className="absolute top-full mt-2 w-72 bg-white text-black rounded-xl shadow-xl overflow-hidden z-50">
                   {suggestions.slice(0, 5).map((item) => (
                     <button
                       key={item._id}
@@ -150,10 +165,10 @@ const Navbar = () => {
               )}
             </Link>
 
-            {/* EXPLORE / PROFILE */}
+            {/* PROFILE */}
             {!user ? (
-              <Link to="/login" className="text-sm font-medium">
-                Explore
+              <Link to="/login">
+                <UserIcon size={22} />
               </Link>
             ) : (
               <Link to="/profile">
@@ -161,7 +176,7 @@ const Navbar = () => {
                   <img
                     src={profile.profileImageUrl}
                     alt="profile"
-                    className="w-8 h-8 rounded-lg object-cover"
+                    className="w-8 h-8 rounded-full object-cover"
                   />
                 ) : (
                   <UserIcon size={22} />
@@ -173,9 +188,7 @@ const Navbar = () => {
           {/* MOBILE RIGHT */}
           <div className="md:hidden">
             {!user ? (
-              <Link to="/login" className="text-sm font-medium">
-                Explore
-              </Link>
+              <Link to="/login">Explore</Link>
             ) : (
               <Link to="/profile">
                 <UserIcon size={22} />
@@ -192,7 +205,9 @@ const Navbar = () => {
         }`}
       >
         <div
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={(e) =>
+            e.target === e.currentTarget && setMobileMenuOpen(false)
+          }
           className={`absolute inset-0 bg-black/40 transition-opacity ${
             mobileMenuOpen ? "opacity-100" : "opacity-0"
           }`}
@@ -226,24 +241,12 @@ const Navbar = () => {
           </div>
 
           <div className="flex flex-col gap-6 px-6 text-lg font-medium">
-            <NavLink to="/" onClick={() => setMobileMenuOpen(false)}>
-              Home
-            </NavLink>
-            <NavLink to="/shop" onClick={() => setMobileMenuOpen(false)}>
-              Shop
-            </NavLink>
-            <NavLink to="/event" onClick={() => setMobileMenuOpen(false)}>
-              Event
-            </NavLink>
-            <NavLink to="/blog" onClick={() => setMobileMenuOpen(false)}>
-              Blog
-            </NavLink>
-            <NavLink to="/about" onClick={() => setMobileMenuOpen(false)}>
-              About
-            </NavLink>
-            <NavLink to="/contact" onClick={() => setMobileMenuOpen(false)}>
-              Contact
-            </NavLink>
+            <NavLink to="/" onClick={() => setMobileMenuOpen(false)}>Home</NavLink>
+            <NavLink to="/shop" onClick={() => setMobileMenuOpen(false)}>Shop</NavLink>
+            <NavLink to="/event" onClick={() => setMobileMenuOpen(false)}>Event</NavLink>
+            <NavLink to="/blog" onClick={() => setMobileMenuOpen(false)}>Blog</NavLink>
+            <NavLink to="/about" onClick={() => setMobileMenuOpen(false)}>About</NavLink>
+            <NavLink to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</NavLink>
           </div>
 
           <div className="absolute bottom-6 w-full px-6">

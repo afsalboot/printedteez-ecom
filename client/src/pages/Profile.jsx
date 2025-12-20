@@ -8,12 +8,21 @@ import {
 } from "../redux/slices/userSlice";
 import { logout } from "../redux/slices/authSlice";
 import { getMyOrders } from "../redux/slices/orderSlice";
+import { LogOut } from "lucide-react";
 
-const tabs = ["User data", "Order history", "View history"];
+const mainTabs = [
+  "Profile",
+  "Orders",
+  "Security",
+  "Appearance",
+  "Notifications",
+  "Danger Zone",
+];
+
+const profileTabs = ["Overview", "Edit Profile"];
 
 const statusColors = {
-  pending:
-    "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300",
+  pending: "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300",
   processing:
     "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300",
   shipped:
@@ -24,28 +33,23 @@ const statusColors = {
     "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
 };
 
-const fallbackImage = "https://placehold.co/400x300/cccccc/969696.webp?text=No%20image&font=lato"
-
 const Profile = () => {
   const dispatch = useDispatch();
-
-  const { profile, loading, error, message } = useSelector(
-    (state) => state.user
-  );
-
-  const { myOrders = [], loading: orderLoading } = useSelector(
-    (state) => state.order
-  );
+  const { profile, message, error } = useSelector((s) => s.user);
+  const { myOrders = [], loading: orderLoading } = useSelector((s) => s.order);
 
   const [activeTab, setActiveTab] = useState(0);
-  const [expanded, setExpanded] = useState(null);
+  const [profileTab, setProfileTab] = useState(0);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState(null);
-
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
+
+  const [darkMode, setDarkMode] = useState(
+    document.documentElement.classList.contains("dark")
+  );
 
   useEffect(() => {
     dispatch(fetchProfile());
@@ -65,295 +69,317 @@ const Profile = () => {
     fd.append("phone", phone);
     if (avatar) fd.append("avatar", avatar);
     dispatch(updateProfile(fd));
+    setProfileTab(0);
   };
 
-  const handlePasswordChange = () => {
-    if (!oldPass || !newPass) return;
-    dispatch(changePassword({ oldPassword: oldPass, newPassword: newPass }));
-  };
-
-  const handleAccountDelete = () => {
-    if (window.confirm("Are you sure? This is permanent.")) {
-      dispatch(deleteMyAccount());
+  const onLogoutClick = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
       dispatch(logout());
+      // Optional: Redirect user to login page
+      // window.location.href = "/login"; 
     }
   };
 
+  // const toggleTheme = () => {
+  //   document.documentElement.classList.toggle("dark");
+  //   setDarkMode(!darkMode);
+  //   localStorage.setItem("theme", !darkMode ? "dark" : "light");
+  // };
+
   return (
-    <div className="min-h-screen px-4 md:px-10 py-8 bg-[#F7F7F7] dark:bg-[#0D0D0D] transition">
-      <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-        Profile
-      </h1>
+    <div className="min-h-screen bg-[#F7F7F7] dark:bg-[#0D0D0D] p-4 md:p-8">
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
 
-      {/* Tabs */}
-      <div className="flex gap-6 mt-6 border-b border-gray-300 dark:border-gray-700">
-        {tabs.map((tab, idx) => (
+        {/* SIDEBAR */}
+        <aside className="bg-white dark:bg-[#1A1A1A] rounded-2xl p-6 shadow flex flex-col">
+          <div className="text-center">
+            <div className="w-20 h-20 mx-auto rounded-full bg-[#B21A15] text-white flex items-center justify-center text-2xl font-bold">
+              {profile?.name?.[0]?.toUpperCase() || "U"}
+            </div>
+            <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">
+              {profile?.name || "User"}
+            </h3>
+            <p className="text-sm text-gray-500">{profile?.email}</p>
+          </div>
+
+          <nav className="mt-8 space-y-2 flex-1">
+            {mainTabs.map((tab, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setActiveTab(i);
+                  setProfileTab(0);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-xl transition
+                  ${
+                    activeTab === i
+                      ? "bg-[#B21A15] dark:bg-[#FF6A63] text-white"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#222]"
+                  }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </nav>
+
           <button
-            key={idx}
-            onClick={() => setActiveTab(idx)}
-            className={`pb-2 px-2 text-lg transition relative ${
-              activeTab === idx
-                ? "text-[#B21A15] dark:text-[#FF6A63] font-semibold"
-                : "text-gray-600 dark:text-gray-400"
-            }`}
+            onClick={onLogoutClick}
+            className="mt-6 cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-black"
           >
-            {tab}
-            {activeTab === idx && (
-              <span className="absolute left-0 bottom-0 w-full h-[3px] bg-[#B21A15] dark:bg-[#FF6A63] rounded-full"></span>
-            )}
+            <LogOut size={16} /> Logout
           </button>
-        ))}
-      </div>
+        </aside>
 
-      {/* TAB CONTENT */}
-      <div className="mt-8">
-        {/* -------------------- USER DATA TAB -------------------- */}
-        {activeTab === 0 && (
-          <div className="space-y-6">
-            {/* Personal Data */}
-            <div className="bg-white dark:bg-[#1A1A1A] shadow-sm rounded-2xl p-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                Personal Data
-              </h2>
+        {/* CONTENT */}
+        <main className="bg-white dark:bg-[#1A1A1A] rounded-2xl p-6 shadow">
 
-              <div className="space-y-4">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400">Name</p>
+          {/* PROFILE */}
+          {activeTab === 0 && (
+            <div className="space-y-6">
+
+              {/* PROFILE SUB TABS */}
+              <div className="flex gap-3">
+                {profileTabs.map((tab, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setProfileTab(i)}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium
+                      ${
+                        profileTab === i
+                          ? "bg-[#B21A15] dark:bg-[#FF6A63] text-white"
+                          : "bg-gray-100 dark:bg-[#222] text-gray-600 dark:text-gray-400"
+                      }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* OVERVIEW (ACCOUNT SUMMARY) */}
+              {profileTab === 0 && (
+                <div className="space-y-6">
+
+                  {/* STATS */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="p-4 rounded-xl bg-gray-50 dark:bg-[#121212]">
+                      <p className="text-sm text-gray-500">Total Orders</p>
+                      <p className="text-2xl font-bold">{myOrders.length}</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-gray-50 dark:bg-[#121212]">
+                      <p className="text-sm text-gray-500">Last Order</p>
+                      <p className="font-medium">
+                        {myOrders.length
+                          ? new Date(myOrders[0].createdAt).toLocaleDateString()
+                          : "—"}
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-gray-50 dark:bg-[#121212]">
+                      <p className="text-sm text-gray-500">Account Status</p>
+                      <p className="font-medium text-green-600">Active</p>
+                    </div>
+                  </div>
+
+                  {/* ACCOUNT INFO */}
+                  <div className="p-5 rounded-2xl bg-gray-50 dark:bg-[#121212] space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Member since</span>
+                      <span className="font-medium">
+                        {profile?.createdAt
+                          ? new Date(profile.createdAt).toLocaleDateString()
+                          : "—"}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Email</span>
+                      <span className="font-medium">{profile?.email}</span>
+                    </div>
+                  </div>
+
+                  {/* QUICK ACTIONS */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setProfileTab(1)}
+                      className="px-6 py-2 rounded-xl bg-[#B21A15] dark:bg-[#FF6A63] text-white"
+                    >
+                      Edit Profile
+                    </button>
+                    <button
+                      onClick={() => setActiveTab(1)}
+                      className="px-6 py-2 rounded-xl border"
+                    >
+                      View Orders
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* EDIT PROFILE */}
+              {profileTab === 1 && (
+                <div className="space-y-4 max-w-xl">
                   <input
-                    className="bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-[#B21A15] dark:focus:border-[#FF6A63] w-full outline-none text-gray-900 dark:text-gray-100 py-1"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    placeholder="Full Name"
+                    className="w-full border-b bg-transparent py-2"
                   />
-                </div>
-
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400">Phone</p>
                   <input
-                    className="bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-[#B21A15] dark:focus:border-[#FF6A63] w-full outline-none text-gray-900 dark:text-gray-100 py-1"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Phone Number"
+                    className="w-full border-b bg-transparent py-2"
                   />
-                </div>
-
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400">Avatar</p>
                   <input
                     type="file"
-                    className="text-gray-700 dark:text-gray-300"
                     onChange={(e) => setAvatar(e.target.files[0])}
                   />
+
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      onClick={handleUpdate}
+                      className="px-6 py-2 rounded-xl bg-[#B21A15] dark:bg-[#FF6A63] text-white"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={() => setProfileTab(0)}
+                      className="px-6 py-2 rounded-xl border"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+
+                  {message && <p className="text-green-500">{message}</p>}
+                  {error && <p className="text-red-500">{error}</p>}
                 </div>
-              </div>
-
-              <button
-                onClick={handleUpdate}
-                className="mt-6 px-6 py-2 bg-[#B21A15] dark:bg-[#FF6A63] hover:opacity-90 text-white rounded-xl"
-              >
-                Update Profile
-              </button>
-
-              {message && (
-                <p className="text-green-600 dark:text-green-400 mt-3">
-                  {message}
-                </p>
               )}
-              {error && (
-                <p className="text-red-600 dark:text-red-400 mt-2">
-                  {error}
-                </p>
+            </div>
+          )}
+
+          {/* ORDERS */}
+          {activeTab === 1 && (
+            <div className="space-y-4">
+              {orderLoading && <p>Loading orders…</p>}
+              {!orderLoading && myOrders.length === 0 && (
+                <p className="text-gray-500">No orders yet</p>
               )}
-            </div>
-
-            {/* Password */}
-            <div className="bg-white dark:bg-[#1A1A1A] shadow-sm rounded-2xl p-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                Login & Password
-              </h2>
-
-              <div className="space-y-4">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Old Password
-                  </p>
-                  <input
-                    type="password"
-                    className="bg-transparent border-b w-full border-gray-300 dark:border-gray-600 focus:border-[#B21A15] dark:focus:border-[#FF6A63] outline-none text-gray-100 py-1"
-                    value={oldPass}
-                    onChange={(e) => setOldPass(e.target.value)}
-                  />
-                </div>
-
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    New Password
-                  </p>
-                  <input
-                    type="password"
-                    className="bg-transparent border-b w-full border-gray-300 dark:border-gray-600 focus:border-[#B21A15] dark:focus:border-[#FF6A63] outline-none text-gray-100 py-1"
-                    value={newPass}
-                    onChange={(e) => setNewPass(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <button
-                onClick={handlePasswordChange}
-                className="mt-6 px-6 py-2 bg-[#B21A15] dark:bg-[#FF6A63] hover:opacity-90 text-white rounded-xl"
-              >
-                Change Password
-              </button>
-            </div>
-
-            {/* Delete Account */}
-            <div className="bg-white dark:bg-[#1A1A1A] shadow-sm rounded-2xl p-6">
-              <button
-                onClick={handleAccountDelete}
-                className="px-6 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700"
-              >
-                Delete My Account
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* -------------------- ORDER HISTORY TAB -------------------- */}
-        {activeTab === 1 && (
-          <div>
-            {orderLoading && (
-              <p className="text-gray-600 dark:text-gray-300">Loading…</p>
-            )}
-
-            {!orderLoading && (!myOrders || myOrders.length === 0) && (
-              <p className="text-gray-600 dark:text-gray-300">
-                No orders found.
-              </p>
-            )}
-
-            <div className="space-y-6">
-              {myOrders?.map((order) => (
+              {myOrders.map((order) => (
                 <div
                   key={order._id}
-                  className="bg-white dark:bg-[#1A1A1A] shadow-sm rounded-2xl p-6 border border-gray-200 dark:border-[#333]"
+                  className="border rounded-xl p-4 flex justify-between items-center"
                 >
-                  {/* Amount + Status */}
-                  <div className="flex justify-between items-center mb-2">
-                    <div>
-                      <p className="text-2xl font-bold text-black dark:text-white">
-                        ₹{order.finalAmount}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Order ID: {order._id.slice(-6).toUpperCase()}
-                      </p>
-                    </div>
-
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm capitalize ${
-                        statusColors[order.status] || ""
-                      }`}
-                    >
-                      {order.status}
-                    </span>
+                  <div>
+                    <p className="font-semibold">₹{order.finalAmount}</p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
-
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                    Ordered on:{" "}
-                    {order.createdAt
-                      ? new Date(order.createdAt).toLocaleString()
-                      : "N/A"}
-                  </p>
-
-                  {/* Item Images Row */}
-                  <div className="flex gap-4 overflow-x-auto py-2">
-                    {order.items?.map((item) => (
-                      <div
-                        key={item._id}
-                        className="flex items-center gap-3 min-w-[200px]"
-                      >
-                        <img
-                          src={item.image || fallbackImage}
-                          alt={item.title}
-                          className="w-16 h-16 object-cover rounded"
-                          onError={(e) => {
-                            e.currentTarget.src = fallbackImage;
-                          }}
-                        />
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-gray-100">
-                            {item.title}
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Size: {item.size} • Qty: {item.qty}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Expand Button */}
-                  <button
-                    onClick={() =>
-                      setExpanded(expanded === order._id ? null : order._id)
-                    }
-                    className="mt-4 text-[#B21A15] dark:text-[#FF6A63] font-medium"
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm ${statusColors[order.status]}`}
                   >
-                    {expanded === order._id
-                      ? "Hide details ▲"
-                      : "View details ▼"}
-                  </button>
-
-                  {/* Expanded Section */}
-                  {expanded === order._id && (
-                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
-                      {order.items?.map((item) => (
-                        <div
-                          key={item._id}
-                          className="flex justify-between items-center"
-                        >
-                          <div>
-                            <p className="text-gray-900 dark:text-gray-200 font-medium">
-                              {item.title}
-                            </p>
-                            <p className="text-gray-500 dark:text-gray-400 text-sm">
-                              Size: {item.size} • Qty: {item.qty}
-                            </p>
-                          </div>
-
-                          <p className="text-gray-800 dark:text-gray-300 font-medium">
-                            ₹{item.price * item.qty}
-                          </p>
-                        </div>
-                      ))}
-
-                      {/* Delivery Address */}
-                      <div className="pt-2">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm">
-                          Delivery Address:
-                        </p>
-                        <p className="text-gray-800 dark:text-gray-200">
-                          {order.shippingAddress?.name},{" "}
-                          {order.shippingAddress?.city},{" "}
-                          {order.shippingAddress?.state} -{" "}
-                          {order.shippingAddress?.postalCode}
-                        </p>
-                      </div>
-
-                      <button className="mt-4 px-4 py-2 rounded-xl bg-[#B21A15] dark:bg-[#FF6A63] hover:opacity-90 text-white text-sm">
-                        Leave a Review
-                      </button>
-                    </div>
-                  )}
+                    {order.status}
+                  </span>
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* -------------------- VIEW HISTORY TAB -------------------- */}
-        {activeTab === 2 && (
-          <p className="text-gray-600 dark:text-gray-300">
-            View history coming soon.
-          </p>
-        )}
+          {/* SECURITY */}
+          {activeTab === 2 && (
+            <div className="space-y-4 max-w-xl">
+              <input
+                type="password"
+                placeholder="Current Password"
+                value={oldPass}
+                onChange={(e) => setOldPass(e.target.value)}
+                className="w-full border-b bg-transparent py-2"
+              />
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPass}
+                onChange={(e) => setNewPass(e.target.value)}
+                className="w-full border-b bg-transparent py-2"
+              />
+              <button
+                onClick={() =>
+                  dispatch(
+                    changePassword({
+                      oldPassword: oldPass,
+                      newPassword: newPass,
+                    })
+                  )
+                }
+                className="px-6 py-2 rounded-xl bg-[#B21A15] dark:bg-[#FF6A63] text-white"
+              >
+                Update Password
+              </button>
+            </div>
+          )}
+
+          {/* APPEARANCE */}
+          {activeTab === 3 && (
+            <div className="flex justify-between items-center max-w-xl border p-4 rounded-xl">
+              <div>
+                <p className="font-medium">Dark Mode</p>
+                <p className="text-sm text-gray-500">Toggle theme</p>
+              </div>
+              <button
+                onClick={toggleTheme}
+                className={`w-12 h-6 rounded-full relative ${
+                  darkMode ? "bg-[#B21A15]" : "bg-gray-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition ${
+                    darkMode ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
+            </div>
+          )}
+
+          {/* NOTIFICATIONS */}
+          {activeTab === 4 && (
+            <div className="space-y-4 max-w-xl">
+              {["Order updates", "Promotions", "Security alerts"].map((n) => (
+                <div
+                  key={n}
+                  className="flex justify-between items-center border p-4 rounded-xl"
+                >
+                  <span>{n}</span>
+                  <input
+                    type="checkbox"
+                    defaultChecked
+                    className="accent-[#B21A15]"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* DANGER ZONE */}
+          {activeTab === 5 && (
+            <div className="max-w-xl border border-red-300 bg-red-50 dark:bg-red-950/30 p-4 rounded-xl">
+              <p className="text-red-600 mb-4">
+                Deleting your account is permanent.
+              </p>
+              <button
+                onClick={() => {
+                  if (window.confirm("This action is irreversible. Continue?")) {
+                    dispatch(deleteMyAccount());
+                    dispatch(logout());
+                  }
+                }}
+                className="px-6 py-2 rounded-xl bg-red-600 text-white"
+              >
+                Delete Account
+              </button>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
