@@ -10,6 +10,6 @@ router.post("/signup", registerUser);
 router.post("/login", loginUser);
 
 //Email verification and notification for signup
-router.get("/verify", verifyEmail);
+router.get("/verify-email", verifyEmail);
 
 module.exports = router;
