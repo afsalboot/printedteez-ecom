@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
-  (typeof window !== "undefined" ? "/api" : "http://localhost:5000/api");
+  "https://printedteez-ecom.onrender.com/api";
 
 const readPersistedRoot = () => {
   try {
