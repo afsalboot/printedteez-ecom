@@ -40,6 +40,11 @@ const pageMeta = [
     subtitle: "Control the storefront layout and featured sections.",
   },
   {
+    match: "/admin/site-pages",
+    title: "Site Content",
+    subtitle: "Update About, Blog, and Contact page content from one workspace.",
+  },
+  {
     match: "/admin/settings",
     title: "Admin Settings",
     subtitle: "Adjust workspace preferences and admin options.",

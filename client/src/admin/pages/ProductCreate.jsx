@@ -69,11 +69,21 @@ const collectionsList = [
 ];
 
 const cardClass =
-  "rounded-[1.8rem] border border-white/60 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm";
+  "rounded-[1.8rem] border border-white/60 bg-white/95 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6";
 const labelClass = "text-sm font-semibold text-slate-800";
 const helperClass = "text-xs leading-5 text-slate-500";
 const inputClass =
   "w-full rounded-2xl border border-slate-200 bg-[#fbfaf7] px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#B21A15] focus:bg-white";
+const requiredFields = new Set([
+  "title",
+  "sku",
+  "category",
+  "sexCategory",
+  "material",
+  "fitType",
+  "neckType",
+  "sleeveType",
+]);
 
 const ProductCreate = () => {
   const dispatch = useDispatch();
@@ -120,6 +130,42 @@ const ProductCreate = () => {
 
   const errorClass = (field) =>
     errors[field] ? "border-red-500 focus:border-red-500" : "border-slate-200";
+
+  const renderLabel = (label, field) => (
+    <label className={labelClass}>
+      {label}
+      {requiredFields.has(field) ? (
+        <span className="ml-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B21A15]">
+          Required
+        </span>
+      ) : null}
+      {errors[field] ? (
+        <span className="ml-2 text-xs font-medium text-red-500">
+          {errors[field]}
+        </span>
+      ) : null}
+    </label>
+  );
+
+  const getCleanSizeRows = (sizes = []) =>
+    (sizes || [])
+      .filter((size) => size.size && size.price)
+      .map((size) => ({
+        size: size.size,
+        stock: Number(size.stock || 0),
+        price: Number(size.price || 0),
+      }));
+
+  const getCleanNamedColors = () =>
+    colors
+      .filter((color) => color.name.trim() !== "")
+      .map((color) => ({
+        name: color.name.trim(),
+        hex: color.hex,
+        sizes: getCleanSizeRows(color.sizes),
+        imageCount: (color.images || []).filter(Boolean).length,
+      }))
+      .filter((color) => color.sizes.length > 0);
 
   const autoTags = (updated) => {
     const tags = [];
@@ -242,17 +288,37 @@ const ProductCreate = () => {
 
   const validate = () => {
     const nextErrors = {};
-    if (!product.title) nextErrors.title = "Required";
-    if (!product.sku) nextErrors.sku = "Required";
-    if (!product.category) nextErrors.category = "Required";
-    const hasValidColorVariant = colors.some(
-      (color) =>
-        color.name.trim() &&
-        (color.sizes || []).some((size) => size.size && size.price)
-    );
-    if (!hasValidColorVariant) {
-      nextErrors.sizes = "Add at least one color with one valid size row";
+    requiredFields.forEach((field) => {
+      if (!String(product[field] ?? "").trim()) {
+        nextErrors[field] = "Required";
+      }
+    });
+
+    const namedColors = getCleanNamedColors();
+    const multiColorMode = namedColors.length >= 2;
+    const sizeSources = namedColors.length
+      ? namedColors
+      : [{ sizes: getCleanSizeRows(colors[0]?.sizes || []) }];
+    const hasValidInventory = sizeSources.some((entry) => entry.sizes.length > 0);
+    const hasGalleryImages = globalImages.some(Boolean);
+
+    if (!hasValidInventory) {
+      nextErrors.sizes = multiColorMode
+        ? "Add at least one valid size row to a color variant"
+        : "Add at least one valid size and price row";
     }
+
+    if (multiColorMode) {
+      const colorsMissingImages = namedColors.filter((color) => color.imageCount === 0);
+      if (colorsMissingImages.length > 0) {
+        nextErrors.colorImages =
+          "Each color variant needs at least one image in Colors & Variant Images";
+      }
+    } else if (!hasGalleryImages) {
+      nextErrors.globalImages =
+        "Add at least one image in Product Gallery for single or no-color products";
+    }
+
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -263,22 +329,13 @@ const ProductCreate = () => {
 
     const fd = new FormData();
 
-    const cleanColors = colors
-      .filter((color) => color.name.trim() !== "")
-      .map((color) => ({
-        name: color.name.trim(),
-        hex: color.hex,
-        sizes: (color.sizes || [])
-          .filter((size) => size.size && size.price)
-          .map((size) => ({
-            size: size.size,
-            stock: Number(size.stock || 0),
-            price: Number(size.price || 0),
-          })),
-      }))
-      .filter((color) => color.sizes.length > 0);
+    const cleanColors = getCleanNamedColors().map(({ imageCount, ...color }) => color);
 
-    const cleanSizes = cleanColors.reduce((acc, color) => {
+    const sizeSources = cleanColors.length
+      ? cleanColors
+      : [{ sizes: getCleanSizeRows(colors[0]?.sizes || []) }];
+
+    const cleanSizes = sizeSources.reduce((acc, color) => {
       color.sizes.forEach((size) => {
         const existing = acc.find((entry) => entry.size === size.size);
         if (existing) {
@@ -353,9 +410,11 @@ const ProductCreate = () => {
   );
   const activeColors = colors.filter((color) => color.name.trim() !== "").length;
   const uploadedGalleryCount = globalImages.filter(Boolean).length;
+  const usesVariantImages = activeColors >= 2;
+  const galleryIsRequired = !usesVariantImages;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-5 text-slate-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-3 text-slate-900 sm:p-5">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -405,6 +464,15 @@ const ProductCreate = () => {
 
         <form onSubmit={handleSubmit} className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-6">
+            <section className="rounded-[1.6rem] border border-[#f0c7bc] bg-[#fff7f4] p-4 text-sm text-slate-700 shadow-sm sm:p-5">
+              <p className="font-semibold text-[#8f241d]">Image requirement</p>
+              <p className="mt-2 leading-6">
+                {usesVariantImages
+                  ? "This product is using multiple color variants, so each saved color needs at least one image in Colors & Variant Images."
+                  : "This product is saving as a single or no-color item, so Product Gallery needs at least one image before you can create it."}
+              </p>
+            </section>
+
             <section className={cardClass}>
               <div className="mb-5">
                 <h2 className="text-xl font-semibold">Basic Information</h2>
@@ -415,14 +483,7 @@ const ProductCreate = () => {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className={labelClass}>
-                    Product Title
-                    {errors.title ? (
-                      <span className="ml-2 text-xs font-medium text-red-500">
-                        {errors.title}
-                      </span>
-                    ) : null}
-                  </label>
+                  {renderLabel("Product Title", "title")}
                   <input
                     className={`${inputClass} mt-2 ${errorClass("title")}`}
                     placeholder="Minimal Oversized Tee"
@@ -438,14 +499,7 @@ const ProductCreate = () => {
                 </div>
 
                 <div>
-                  <label className={labelClass}>
-                    SKU
-                    {errors.sku ? (
-                      <span className="ml-2 text-xs font-medium text-red-500">
-                        {errors.sku}
-                      </span>
-                    ) : null}
-                  </label>
+                  {renderLabel("SKU", "sku")}
                   <input
                     className={`${inputClass} mt-2 ${errorClass("sku")}`}
                     placeholder="Unique inventory code"
@@ -460,14 +514,7 @@ const ProductCreate = () => {
 
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 <div>
-                  <label className={labelClass}>
-                    Category
-                    {errors.category ? (
-                      <span className="ml-2 text-xs font-medium text-red-500">
-                        {errors.category}
-                      </span>
-                    ) : null}
-                  </label>
+                  {renderLabel("Category", "category")}
                   <select
                     className={`${inputClass} mt-2 ${errorClass("category")}`}
                     value={product.category}
@@ -581,7 +628,7 @@ const ProductCreate = () => {
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">
-                {[
+                {[ 
                   ["sexCategory", sexOptions],
                   ["material", materialOptions],
                   ["fabricWeight", fabricWeights],
@@ -591,9 +638,9 @@ const ProductCreate = () => {
                   ["sleeveType", sleeveOptions],
                 ].map(([key, list]) => (
                   <div key={key}>
-                    <label className={labelClass}>{fieldLabels[key]}</label>
+                    {renderLabel(fieldLabels[key], key)}
                     <select
-                      className={`${inputClass} mt-2`}
+                      className={`${inputClass} mt-2 ${errorClass(key)}`}
                       value={product[key]}
                       onChange={(e) => updateField(key, e.target.value)}
                     >
@@ -652,7 +699,7 @@ const ProductCreate = () => {
                 <div>
                   <h2 className="text-xl font-semibold">Inventory By Color</h2>
                   <p className={`mt-1 ${helperClass}`}>
-                    Each color keeps its own sizes, stock, and pricing. At least one valid color variant is required.
+                    Add at least one size and price row. If you are not using colors, leave the color name blank and save with Product Gallery images only.
                   </p>
                   {errors.sizes ? (
                     <p className="mt-2 text-xs font-medium text-red-500">
@@ -805,10 +852,22 @@ const ProductCreate = () => {
             <section className={cardClass}>
               <div className="mb-5 flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-semibold">Colors & Variant Images</h2>
+                  <h2 className="text-xl font-semibold">
+                    Colors & Variant Images
+                    {usesVariantImages ? (
+                      <span className="ml-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B21A15]">
+                        Required
+                      </span>
+                    ) : null}
+                  </h2>
                   <p className={`mt-1 ${helperClass}`}>
-                    Add swatches, upload images, and define stock by color.
+                    Add swatches, upload images, and define stock by color. This becomes required when you save two or more color variants.
                   </p>
+                  {errors.colorImages ? (
+                    <p className="mt-2 text-xs font-medium text-red-500">
+                      {errors.colorImages}
+                    </p>
+                  ) : null}
                 </div>
                 <button
                   type="button"
@@ -893,10 +952,22 @@ const ProductCreate = () => {
 
             <section className={cardClass}>
               <div className="mb-5">
-                <h2 className="text-xl font-semibold">Product Gallery</h2>
+                <h2 className="text-xl font-semibold">
+                  Product Gallery
+                  {galleryIsRequired ? (
+                    <span className="ml-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#B21A15]">
+                      Required
+                    </span>
+                  ) : null}
+                </h2>
                 <p className={`mt-1 ${helperClass}`}>
-                  Upload the main gallery images used in listing previews and detail pages.
+                  Upload the main gallery images used in listing previews and detail pages. This is required for single or no-color products.
                 </p>
+                {errors.globalImages ? (
+                  <p className="mt-2 text-xs font-medium text-red-500">
+                    {errors.globalImages}
+                  </p>
+                ) : null}
               </div>
 
               <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
@@ -1010,7 +1081,8 @@ const ProductCreate = () => {
               <div className="mt-4 space-y-4 text-sm leading-6 text-slate-600">
                 <p>Use strong product titles and keep descriptions focused on fit, feel, and why the piece stands out.</p>
                 <p>At least one valid size and price row is required before submission.</p>
-                <p>Color variants only count once they have a name. Empty color rows are ignored on submit.</p>
+                <p>Single or no-color products must upload at least one Product Gallery image.</p>
+                <p>When two or more colors are added, each saved color variant needs its own variant image.</p>
               </div>
             </div>
           </aside>

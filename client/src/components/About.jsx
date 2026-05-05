@@ -1,189 +1,162 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CheckCircle } from "lucide-react";
+import { Link } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { getSitePage } from "../redux/slices/sitePageSlice.jsx";
 
 const About = () => {
+  const dispatch = useDispatch();
+  const { pages = {}, loading } = useSelector((state) => state.sitePages);
+  const aboutPage = pages.about;
+  const hero = aboutPage?.hero || {};
+  const content = aboutPage?.content || {};
+  const commitmentPoints = Array.isArray(content.commitmentPoints) ? content.commitmentPoints : [];
+  const milestones = Array.isArray(content.milestones) ? content.milestones : [];
+  const stats = Array.isArray(content.stats) ? content.stats : [];
+
+  useEffect(() => {
+    if (!aboutPage) {
+      dispatch(getSitePage("about"));
+    }
+  }, [aboutPage, dispatch]);
+
   return (
-    <div className="w-full bg-white">
-      {/* HEADER BANNER */}
-      <div className="w-full h-72 bg-gradient-to-r from-[#B21A15] to-red-700 text-white flex flex-col justify-center items-center text-center relative overflow-hidden">
-        {/* soft glow */}
+    <div className="w-full bg-transparent text-slate-900 dark:text-slate-100">
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#B21A15] via-[#c5261f] to-red-700 text-white">
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_white,_transparent_60%)]" />
-        <div className="relative px-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-wide drop-shadow">
-            About Us
-          </h1>
-          <p className="text-sm md:text-base mt-3 opacity-95 max-w-xl mx-auto leading-relaxed">
-            Your trusted fashion destination – quality, style & comfort in every piece.
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.18),_transparent_70%)]" />
+        <div className="relative mx-auto flex min-h-[300px] max-w-6xl flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[340px]">
+          <p className="text-xs uppercase tracking-[0.34em] text-white/75">
+            {hero.eyebrow || "About / Brand Story"}
           </p>
-          <span className="inline-flex mt-4 px-4 py-1 rounded-full border border-white/40 text-xs uppercase tracking-[0.2em] bg-white/10 backdrop-blur-sm">
-            Crafted for Everyday Wear
+          <h1 className="mt-4 max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+            {hero.title || "About Us"}
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/90 sm:text-base">
+            {hero.subtitle || "Loading brand story..."}
+          </p>
+          <span className="mt-5 inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs uppercase tracking-[0.2em] backdrop-blur-sm">
+            {hero.badge || "Crafted for Everyday Wear"}
           </span>
         </div>
       </div>
 
-      {/* SECTION 1: WHO WE ARE */}
-      <div className="max-w-6xl mx-auto px-6 py-12 md:py-16">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-center">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Who We Are
+            <h2 className="text-3xl font-bold text-slate-950 dark:text-white sm:text-4xl">
+              {content.introTitle || "Who We Are"}
             </h2>
-            <p className="text-gray-600 leading-relaxed text-lg">
-              We are a modern fashion brand committed to creating high-quality apparel 
-              with comfort, style, and durability. Our mission is to bring premium 
-              streetwear and everyday essentials at affordable prices. With a strong 
-              focus on fabric quality, craftsmanship, and design, we ensure every 
-              product feels as good as it looks.
+            <p className="mt-4 text-base leading-8 text-slate-600 dark:text-slate-300">
+              {content.introText || "Loading story..."}
             </p>
           </div>
 
-          {/* Small highlight card */}
-          <div className="bg-gray-50 rounded-2xl shadow-sm p-6 border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">
-              What Makes Us Different
+          <div className="rounded-[2rem] border border-slate-200/80 bg-white/85 p-6 shadow-[0_22px_60px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_24px_60px_rgba(0,0,0,0.32)]">
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+              {content.featureTitle || "What Makes Us Different"}
             </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              From concept to creation, we obsess over the details – fabric weight, fit,
-              print quality, and long-term comfort. We don’t just make clothes, we build
-              pieces you’ll want to live in.
+            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+              {content.featureText || "Loading details..."}
             </p>
           </div>
         </div>
       </div>
 
-      {/* SECTION 2: IMAGE + TEXT */}
-      <div className="bg-gray-50 py-12 md:py-16">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
-          <div className="order-2 md:order-1">
-            <h3 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
-              Our Commitment
+      <div className="bg-white/60 py-10 dark:bg-white/[0.03] sm:py-16">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:items-center">
+          <div className="order-2 lg:order-1">
+            <h3 className="text-2xl font-semibold text-slate-950 dark:text-white sm:text-3xl">
+              {content.commitmentTitle || "Our Commitment"}
             </h3>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              We ensure that every product goes through multiple quality checks, 
-              from fabric selection to stitching to packaging. Our designs are 
-              crafted for daily comfort while staying trendy and stylish.
+            <p className="mt-4 text-base leading-8 text-slate-600 dark:text-slate-300">
+              {content.commitmentText || "Loading commitment..."}
             </p>
 
-            <ul className="mt-5 space-y-3">
-              {[
-                "Premium fabric quality",
-                "Eco-friendly printing",
-                "Trendy streetwear designs",
-                "Affordable pricing",
-                "Fast delivery & easy returns",
-              ].map((text, i) => (
+            <ul className="mt-6 space-y-3">
+              {commitmentPoints.map((text, index) => (
                 <li
-                  key={i}
-                  className="flex items-center gap-2 text-gray-700 text-sm md:text-base"
+                  key={`${text}-${index}`}
+                  className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200"
                 >
-                  <CheckCircle className="text-[#B21A15]" size={20} />
-                  {text}
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-[#B21A15]" />
+                  <span>{text}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="order-1 md:order-2">
-            <div className="relative h-80 w-full">
-              <div className="absolute -inset-2 rounded-2xl bg-gradient-to-tr from-[#B21A15]/10 to-red-500/10 blur-sm" />
+          <div className="order-1 lg:order-2">
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/40 shadow-[0_26px_70px_rgba(15,23,42,0.14)]">
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#B21A15]/15 via-transparent to-transparent" />
               <img
-                src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd47"
-                alt="fashion"
-                className="relative rounded-2xl shadow-md object-cover h-80 w-full"
+                src={content.featureImage}
+                alt={content.featureTitle || "About feature"}
+                className="h-[280px] w-full object-cover sm:h-[420px]"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* SECTION 3: OUR JOURNEY */}
-      <div className="max-w-6xl mx-auto px-6 py-12 md:py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-          Our Journey
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
+        <h2 className="text-3xl font-bold text-slate-950 dark:text-white sm:text-4xl">
+          {content.journeyTitle || "Our Journey"}
         </h2>
-        <p className="text-gray-600 text-lg leading-relaxed mb-8">
-          Built with passion for fashion and a mission to redefine everyday wear, 
-          our brand started with a simple idea: good clothes should be comfortable, 
-          stylish, and accessible to everyone. Today, we proudly serve thousands 
-          of customers with high-quality T-shirts, hoodies, and more.
+        <p className="mt-4 max-w-4xl text-base leading-8 text-slate-600 dark:text-slate-300">
+          {content.journeyText || "Loading journey..."}
         </p>
 
-        {/* simple timeline / milestones */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">
-              The Idea
-            </p>
-            <h4 className="font-semibold text-gray-900 mb-2">
-              Started with a Vision
-            </h4>
-            <p className="text-sm text-gray-600">
-              A small team with one goal: everyday wear that actually feels premium.
-            </p>
-          </div>
-          <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">
-              The Growth
-            </p>
-            <h4 className="font-semibold text-gray-900 mb-2">
-              Community First
-            </h4>
-            <p className="text-sm text-gray-600">
-              Feedback from real customers helped us refine our fits and designs.
-            </p>
-          </div>
-          <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-2">
-              Today
-            </p>
-            <h4 className="font-semibold text-gray-900 mb-2">
-              Growing with You
-            </h4>
-            <p className="text-sm text-gray-600">
-              We continue to expand collections while staying true to comfort & quality.
-            </p>
-          </div>
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {milestones.map((item, index) => (
+            <div
+              key={`${item.title || "milestone"}-${index}`}
+              className="rounded-[2rem] border border-slate-200/80 bg-white/85 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/[0.05]"
+            >
+              <p className="text-[11px] uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                {item.label}
+              </p>
+              <h3 className="mt-3 text-xl font-semibold text-slate-950 dark:text-white">
+                {item.title}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                {item.text}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* SECTION 4: STATS */}
-      <div className="bg-gradient-to-r from-[#B21A15] to-red-700 text-white py-12 md:py-14">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center px-6">
-          <div className="flex flex-col items-center">
-            <h3 className="text-4xl md:text-5xl font-extrabold">50K+</h3>
-            <p className="text-sm opacity-90 mt-2 tracking-wide">
-              Happy Customers
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <h3 className="text-4xl md:text-5xl font-extrabold">500+</h3>
-            <p className="text-sm opacity-90 mt-2 tracking-wide">
-              Premium Products
-            </p>
-          </div>
-          <div className="flex flex-col items-center">
-            <h3 className="text-4xl md:text-5xl font-extrabold">4.8⭐</h3>
-            <p className="text-sm opacity-90 mt-2 tracking-wide">
-              Customer Rating
-            </p>
-          </div>
+      <div className="bg-gradient-to-r from-[#170f12] via-[#291519] to-[#3a1716] py-12 text-white sm:py-14">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 text-center sm:px-6 md:grid-cols-3">
+          {stats.map((item, index) => (
+            <div key={`${item.label || "stat"}-${index}`}>
+              <h3 className="text-4xl font-extrabold sm:text-5xl">{item.value}</h3>
+              <p className="mt-2 text-sm uppercase tracking-[0.22em] text-white/75">
+                {item.label}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* SECTION 5: CTA */}
-      <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-          Ready to Explore Our Collection?
+      <div className="mx-auto max-w-5xl px-4 py-14 text-center sm:px-6 sm:py-20">
+        <h2 className="text-3xl font-bold text-slate-950 dark:text-white sm:text-4xl">
+          {content.ctaTitle || "Ready to Explore Our Collection?"}
         </h2>
-        <p className="text-gray-600 mt-3 text-lg">
-          Discover premium fashion made for comfort & style.
+        <p className="mt-4 text-base text-slate-600 dark:text-slate-300">
+          {content.ctaText || "Discover premium fashion made for comfort and style."}
         </p>
-        <a
-          href="/shop"
-          className="inline-block bg-[#B21A15] text-white px-10 py-3.5 mt-7 rounded-full text-lg font-medium hover:opacity-90 hover:translate-y-[1px] active:translate-y-0 transition-all shadow-md"
+        <Link
+          to={content.ctaLink || "/shop"}
+          className="mt-7 inline-flex rounded-full bg-[#B21A15] px-8 py-3.5 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(178,26,21,0.25)] transition hover:bg-[#97150f]"
         >
-          Shop Now
-        </a>
+          {content.ctaLabel || "Shop Now"}
+        </Link>
+
+        {!aboutPage && loading ? (
+          <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">Loading page content...</p>
+        ) : null}
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   Settings,
   LayoutGrid,
   Tags,
+  FileText,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { adminLogout } from "../../redux/slices/adminSlice";
@@ -22,6 +23,7 @@ const navItems = [
   { to: "/admin/coupons/manage", icon: TicketPercent, label: "Coupon Manage" },
   { to: "/admin/orders", icon: ShoppingCart, label: "Order Manage" },
   { to: "/admin/section", icon: LayoutGrid, label: "Sections" },
+  { to: "/admin/site-pages", icon: FileText, label: "Site Pages" },
 ];
 
 const AdminSidebar = ({

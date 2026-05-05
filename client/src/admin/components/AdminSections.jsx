@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 const cardClass =
-  "rounded-[1.8rem] border border-white/60 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm";
+  "rounded-[1.8rem] border border-white/60 bg-white/95 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6";
 const inputClass =
   "w-full rounded-2xl border border-slate-200 bg-[#fbfaf7] px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#B21A15] focus:bg-white";
 const labelClass = "text-sm font-semibold text-slate-800";
@@ -91,7 +91,7 @@ const AdminSections = () => {
   );
 
   return (
-    <div className="rounded-[32px] border border-red-100/70 bg-white/80 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+    <div className="rounded-[28px] border border-red-100/70 bg-white/80 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:rounded-[32px] sm:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -108,7 +108,7 @@ const AdminSections = () => {
 
           <button
             onClick={startCreate}
-            className="inline-flex items-center gap-2 rounded-full bg-[#B21A15] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#97150f]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#B21A15] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#97150f] sm:w-auto"
           >
             <Plus className="h-4 w-4" />
             Add Section
@@ -154,8 +154,8 @@ const AdminSections = () => {
         )}
 
         {showForm && (
-          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/35 px-4">
-            <div className="w-full max-w-xl rounded-[2rem] border border-white/40 bg-white p-6 shadow-[0_30px_90px_rgba(15,23,42,0.18)]">
+          <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/35 p-0 sm:items-center sm:px-4">
+            <div className="w-full max-w-xl rounded-t-[2rem] border border-white/40 bg-white p-4 shadow-[0_30px_90px_rgba(15,23,42,0.18)] sm:rounded-[2rem] sm:p-6">
               <div className="mb-5 flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#B21A15]">
@@ -241,7 +241,7 @@ const AdminSections = () => {
                   </p>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-2">
+                <div className="flex flex-col-reverse justify-end gap-3 pt-2 sm:flex-row">
                   <button
                     type="button"
                     className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-[#faf7f2]"
@@ -284,7 +284,7 @@ const AdminSections = () => {
               {sortedList.map((sec) => (
                 <div
                   key={sec._id}
-                  className="grid gap-4 px-6 py-5 transition hover:bg-[#fcfaf7] lg:grid-cols-[220px_minmax(0,1fr)_140px_220px]"
+                  className="grid gap-4 px-4 py-5 transition hover:bg-[#fcfaf7] sm:px-6 lg:grid-cols-[220px_minmax(0,1fr)_140px_220px]"
                 >
                   <div>
                     <span className="inline-flex items-center gap-2 rounded-full bg-[#fff5f2] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#B21A15]">

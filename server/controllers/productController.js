@@ -61,6 +61,8 @@ const normalizeColors = (colors = [], fallbackSizes = []) =>
     }))
     .filter((color) => color.name);
 
+const hasValidSizeRows = (sizes = []) => normalizeSizes(sizes).length > 0;
+
 const normalizeSizeChart = (rows = []) =>
   (Array.isArray(rows) ? rows : [])
     .map((row) => ({
@@ -291,6 +293,7 @@ const createProduct = async (req, res) => {
     const rawColors = parseJsonField(colors, []);
     const collectionsArr = parseJsonField(collections, []);
     const colorsArr = normalizeColors(rawColors, sizesArr);
+    const usesVariantImages = colorsArr.length >= 2;
 
     const files = req.files; // contains multiple fields + color images
 
@@ -330,6 +333,30 @@ const createProduct = async (req, res) => {
 
         colorsArr[i].images = await Promise.all(uploads);
       }
+    }
+
+    if (!hasValidSizeRows(sizesArr)) {
+      return res.status(400).json({
+        message: "Add at least one valid size and price row before saving",
+      });
+    }
+
+    if (usesVariantImages) {
+      const missingVariantImages = colorsArr.some(
+        (color) => !Array.isArray(color.images) || color.images.length === 0
+      );
+
+      if (missingVariantImages) {
+        return res.status(400).json({
+          message:
+            "Each color variant needs at least one image in Colors & Variant Images",
+        });
+      }
+    } else if (productImages.length === 0) {
+      return res.status(400).json({
+        message:
+          "Product Gallery needs at least one image for single or no-color products",
+      });
     }
 
     const product = await Product.create({

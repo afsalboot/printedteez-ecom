@@ -16,6 +16,7 @@ const feedbackRouter = require("./routes/feedbackRoutes.js");
 const cartRouter = require("./routes/cartRoutes.js");
 const wishlistRouter = require("./routes/wishlistRoutes.js");
 const sectionRouter = require("./routes/sectionRoutes.js");
+const sitePageRouter = require("./routes/sitePageRoutes.js");
 
 const REQUIRED_ENV_KEYS = ["MONGO_URI", "JWT_SECRET"];
 const missingEnvKeys = REQUIRED_ENV_KEYS.filter((key) => !process.env[key]);
@@ -35,26 +36,29 @@ if (isProduction) {
   app.set("trust proxy", 1);
 }
 
-const parseAllowedOrigins = () =>
-  (process.env.ALLOWED_ORIGINS || process.env.FRONTEND_URL || "")
-    .split(",")
+const parseConfiguredOrigins = (...values) =>
+  values
+    .filter(Boolean)
+    .flatMap((value) => String(value).split(","))
     .map((origin) => origin.trim())
     .filter(Boolean);
 
+const parseAllowedOrigins = () =>
+  parseConfiguredOrigins(
+    process.env.ALLOWED_ORIGINS,
+    process.env.FRONTEND_URL
+  );
+
 const allowedOrigins = new Set([
   ...parseAllowedOrigins(),
-  ...(isProduction
-    ? []
-    : [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-      ]),
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
 ]);
 
 const isAllowedDevOrigin = (origin) => {
-  if (!origin || isProduction) return false;
+  if (!origin) return false;
 
   try {
     const { hostname, protocol } = new URL(origin);
@@ -68,6 +72,19 @@ const isAllowedDevOrigin = (origin) => {
   } catch {
     return false;
   }
+};
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin) || isAllowedDevOrigin(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 const globalLimiter = rateLimit({
@@ -88,18 +105,8 @@ const authLimiter = rateLimit({
 
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.has(origin) || isAllowedDevOrigin(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(cookieParser());
 app.use(globalLimiter);
 
@@ -122,6 +129,7 @@ app.use("/api/feedback", feedbackRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/sections", sectionRouter);
+app.use("/api/site-pages", sitePageRouter);
 
 app.get("/", (_req, res) => res.json({ message: "PrintedTees API Running" }));
 

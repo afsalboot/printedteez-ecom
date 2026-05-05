@@ -28,12 +28,14 @@ import ProductUpdate from "./admin/components/ProductUpdate.jsx";
 import ProductAdminDetails from "./admin/pages/ProductAdminDetails.jsx";
 import CouponUpdate from "./admin/components/CouponUpdate.jsx";
 import AdminSections from "./admin/components/AdminSections.jsx";
+import SitePagesManage from "./admin/pages/SitePagesManage.jsx";
 import Events from "./components/Events.jsx";
 import About from "./components/About.jsx";
 import Contact from "./components/Contact.jsx";
 import Blog from "./components/Blog.jsx";
 import PaymentSuccess from "./components/PaymentSuccess.jsx";
 import MyOrders from "./components/MyOrders.jsx";
+import ThemeSync from "./ui/ThemeSync.jsx";
 
 const App = () => {
   const darkMode = useSelector((state) => state.ui.darkMode);
@@ -51,7 +53,9 @@ const App = () => {
   };
 
   return (
-    <Routes>
+    <>
+      <ThemeSync />
+      <Routes>
       {/* USER ROUTES */}
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
@@ -98,10 +102,12 @@ const App = () => {
         <Route path="products/edit/:id" element={<ProductUpdate />} />
         <Route path="coupons/edit/:id" element={<CouponUpdate />} />
         <Route path="section" element={<AdminSections />} />
+        <Route path="site-pages" element={<SitePagesManage />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 };
 

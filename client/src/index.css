@@ -6,6 +6,18 @@
   font-family: "Outfit", sans-serif;
 }
 
+html {
+  background-color: #faf7f5;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(178, 26, 21, 0.07), transparent 24%),
+    linear-gradient(180deg, #faf7f5 0%, #f5efe9 100%);
+  color: #111827;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
 /* simple image zoom helper */
 .product-image {
   transition: transform 0.25s ease-in-out;
@@ -15,9 +27,26 @@
 }
 
 /* dark mode tweaks */
+.dark html {
+  background-color: #0b0d12;
+}
+
 .dark body {
-  background-color: #0b1220;
-  color: #e6eef8;
+  background:
+    radial-gradient(circle at top, rgba(178, 26, 21, 0.18), transparent 22%),
+    radial-gradient(circle at bottom left, rgba(127, 29, 29, 0.16), transparent 26%),
+    linear-gradient(180deg, #0b0d12 0%, #12151c 52%, #171b24 100%);
+  color: #e8edf5;
+}
+
+::selection {
+  background: rgba(178, 26, 21, 0.18);
+  color: inherit;
+}
+
+.dark ::selection {
+  background: rgba(239, 68, 68, 0.32);
+  color: #fff4f2;
 }
 
 .sidebar-item {

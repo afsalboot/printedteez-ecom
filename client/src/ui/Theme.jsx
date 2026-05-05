@@ -1,51 +1,11 @@
 // src/ui/Theme.jsx
 import { useDispatch, useSelector } from "react-redux";
-import { setThemeMode, setDarkMode } from "../redux/slices/uiSlice.jsx";
+import { setThemeMode } from "../redux/slices/uiSlice.jsx";
 import { Sun, Moon, Monitor, Smartphone, Tablet } from "lucide-react";
-import { useEffect } from "react";
-
-const applyDocumentTheme = (isDark) => {
-  if (typeof document === "undefined") return;
-  document.documentElement.classList.toggle("dark", isDark);
-};
 
 const Theme = () => {
   const dispatch = useDispatch();
   const themeMode = useSelector((state) => state.ui.themeMode);
-
-  // Sync theme with system / user preference
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const systemPrefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    const effectiveDark =
-      themeMode === "dark" ||
-      (themeMode === "system" && systemPrefersDark);
-
-    dispatch(setDarkMode(effectiveDark));
-    applyDocumentTheme(effectiveDark);
-    localStorage.setItem("themeMode", themeMode);
-  }, [themeMode, dispatch]);
-
-  // Listen to system theme changes when in "system" mode
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (themeMode !== "system") return;
-
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleChange = (e) => {
-      const isDark = e.matches;
-      dispatch(setDarkMode(isDark));
-      applyDocumentTheme(isDark);
-    };
-
-    media.addEventListener("change", handleChange);
-    return () => media.removeEventListener("change", handleChange);
-  }, [themeMode, dispatch]);
 
   const handleChangeMode = (mode) => {
     dispatch(setThemeMode(mode));

@@ -4,7 +4,7 @@ import { Search, RefreshCw, Trash2, Users, Mail, Shield } from "lucide-react";
 import { getAllUsers, deleteUser } from "../../redux/slices/userSlice";
 
 const cardClass =
-  "rounded-[1.8rem] border border-white/60 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm";
+  "rounded-[1.8rem] border border-white/60 bg-white/95 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6";
 
 const UserManage = () => {
   const dispatch = useDispatch();
@@ -73,7 +73,7 @@ const UserManage = () => {
   };
 
   return (
-    <div className="rounded-[32px] border border-red-100/70 bg-white/80 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+    <div className="rounded-[28px] border border-red-100/70 bg-white/80 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:rounded-[32px] sm:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -112,7 +112,7 @@ const UserManage = () => {
 
         <div className={`${cardClass} mb-6`}>
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto_auto]">
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto_auto]">
               <div>
                 <label className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                   <Search className="h-3.5 w-3.5 text-[#B21A15]" />
@@ -186,7 +186,7 @@ const UserManage = () => {
               {paginated.map((u, idx) => (
                 <div
                   key={u._id}
-                  className="grid gap-4 px-6 py-5 transition hover:bg-[#fcfaf7] md:grid-cols-[56px_minmax(0,1fr)_220px_160px]"
+                  className="grid gap-4 px-4 py-5 transition hover:bg-[#fcfaf7] sm:px-6 lg:grid-cols-[56px_minmax(0,1fr)_220px_160px]"
                 >
                   <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f7eee8] text-sm font-semibold text-[#B21A15]">
                     {(page - 1) * perPage + idx + 1}
@@ -238,7 +238,7 @@ const UserManage = () => {
           )}
         </div>
 
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {page > 1 ? (
             <button
               onClick={() => setPage(page - 1)}
@@ -250,7 +250,7 @@ const UserManage = () => {
             <div />
           )}
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {Array.from({ length: totalPages }).map((_, i) => (
               <button
                 key={i}

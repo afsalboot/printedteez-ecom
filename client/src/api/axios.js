@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://printedteez-ecom.onrender.com/api";
+const API_BASE = import.meta.env.DEV
+  ? "/api"
+  : import.meta.env.VITE_API_BASE_URL ||
+    "https://printedteez-ecom.onrender.com/api";
 
 const readPersistedRoot = () => {
   try {

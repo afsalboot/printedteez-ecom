@@ -3,7 +3,7 @@ import Theme from "../../ui/Theme";
 
 const Settings = () => {
   return (
-    <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-gray-100 p-3 text-gray-900 dark:bg-[#111318] dark:text-gray-100 sm:p-5 md:p-6">
       <div className="max-w-4xl mx-auto">
         
         {/* HEADER */}
@@ -18,7 +18,7 @@ const Settings = () => {
         </div>
 
         {/* THEME CARD */}
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow p-6 flex items-center justify-between">
+        <div className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow dark:border-gray-700 dark:bg-gray-800 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
             <h2 className="text-lg font-semibold">Dark Mode</h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
@@ -27,7 +27,9 @@ const Settings = () => {
           </div>
 
           {/* THEME SWITCH */}
-          <Theme />
+          <div className="w-full sm:w-auto">
+            <Theme />
+          </div>
         </div>
 
       </div>

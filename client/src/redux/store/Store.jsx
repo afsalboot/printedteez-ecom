@@ -24,6 +24,7 @@ import userData from "../slices/userSlice.jsx";
 import uiData from "../slices/uiSlice.jsx";
 import sectionsData from "../slices/sectionSlice.jsx";
 import searchData from "../slices/searchSlice.jsx";
+import sitePagesData from "../slices/sitePageSlice.jsx";
 
 // Combine all reducers
 const rootReducer = combineReducers({
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   ui: uiData,
   sections: sectionsData,
   search: searchData,
+  sitePages: sitePagesData,
 });
 
 // Persist config

@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 const cardClass =
-  "rounded-[1.8rem] border border-white/60 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm";
+  "rounded-[1.8rem] border border-white/60 bg-white/95 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6";
 const inputClass =
   "w-full rounded-2xl border border-slate-200 bg-[#fbfaf7] px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#B21A15] focus:bg-white";
 const labelClass = "text-sm font-semibold text-slate-800";
@@ -113,7 +113,7 @@ const CouponUpdate = () => {
 
   if (!hasLoadedForm && loading) {
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-5 text-slate-900">
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-3 text-slate-900 sm:p-5">
         <div className="mx-auto max-w-6xl rounded-[1.8rem] border border-white/60 bg-white/95 p-8 text-center shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
           Loading coupon...
         </div>
@@ -122,7 +122,7 @@ const CouponUpdate = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-5 text-slate-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-3 text-slate-900 sm:p-5">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -186,7 +186,7 @@ const CouponUpdate = () => {
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <label className={labelClass}>Coupon Code</label>
-                  <div className="mt-2 flex gap-2">
+                  <div className="mt-2 flex flex-col gap-2 sm:flex-row">
                     <input
                       className={inputClass}
                       placeholder="E.g. FESTIVE20"

@@ -41,7 +41,7 @@ const ProductCard = ({ id, image, title, price, badge }) => {
   return (
     <article
       onClick={goToDetails}
-      className="group relative w-full cursor-pointer overflow-hidden rounded-[1.9rem] border border-black/5 bg-[linear-gradient(180deg,_#fffdfb_0%,_#fff6ef_100%)] shadow-[0_14px_36px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_56px_rgba(15,23,42,0.12)]"
+      className="group relative w-full cursor-pointer overflow-hidden rounded-[1.9rem] border border-black/5 bg-[linear-gradient(180deg,_#fffdfb_0%,_#fff6ef_100%)] shadow-[0_14px_36px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_56px_rgba(15,23,42,0.12)] dark:border-white/8 dark:bg-[linear-gradient(180deg,_rgba(27,31,40,0.98)_0%,_rgba(21,24,31,0.98)_100%)] dark:shadow-[0_20px_44px_rgba(0,0,0,0.28)]"
     >
       {badge && (
         <span className="absolute left-4 top-4 z-10 rounded-full bg-[#B21A15] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.24em] text-white shadow-[0_10px_24px_rgba(178,26,21,0.24)]">
@@ -56,14 +56,14 @@ const ProductCard = ({ id, image, title, price, badge }) => {
         className={`absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur-sm transition ${
           isWishlisted
             ? "border-[#B21A15] bg-[#B21A15] text-white shadow-lg shadow-[#B21A15]/20"
-            : "border-white/70 bg-white/88 text-gray-700 hover:border-[#B21A15] hover:text-[#B21A15]"
+            : "border-white/70 bg-white/88 text-gray-700 hover:border-[#B21A15] hover:text-[#B21A15] dark:border-white/10 dark:bg-white/8 dark:text-gray-200 dark:hover:border-[#ff8f82] dark:hover:text-[#ff8f82]"
         } ${wishlistLoading ? "pointer-events-none opacity-70" : ""}`}
       >
         <Heart className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""}`} />
       </button>
 
-      <div className="relative aspect-[4/5] overflow-hidden bg-[linear-gradient(145deg,_#f7ede5_0%,_#eee2d6_100%)]">
-        <div className="absolute inset-x-[14%] bottom-5 h-12 rounded-full bg-black/10 blur-2xl" />
+      <div className="relative aspect-[4/5] overflow-hidden bg-[linear-gradient(145deg,_#f7ede5_0%,_#eee2d6_100%)] dark:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_42%),linear-gradient(145deg,_#161a22_0%,_#222833_100%)]">
+        <div className="absolute inset-x-[14%] bottom-5 h-12 rounded-full bg-black/10 blur-2xl dark:bg-black/35" />
         <img
           src={image || "/placeholder.png"}
           alt={title || "product"}
@@ -74,13 +74,13 @@ const ProductCard = ({ id, image, title, price, badge }) => {
 
       <div className="space-y-4 p-4 sm:p-5">
         <div className="min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B21A15]/70">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#B21A15]/70 dark:text-[#ff9d91]/80">
             PrintedTeez
           </p>
-          <h3 className="mt-2 line-clamp-2 text-[15px] font-semibold leading-6 text-gray-900 sm:text-base">
+          <h3 className="mt-2 line-clamp-2 text-[15px] font-semibold leading-6 text-gray-900 dark:text-gray-100 sm:text-base">
             {title}
           </h3>
-          <p className="mt-3 text-xl font-semibold text-gray-950">
+          <p className="mt-3 text-xl font-semibold text-gray-950 dark:text-white">
             {displayPrice === "--" ? "Rs. --" : `Rs. ${displayPrice}`}
           </p>
         </div>
@@ -90,7 +90,7 @@ const ProductCard = ({ id, image, title, price, badge }) => {
             e.stopPropagation();
             navigate(`/product/${id}`);
           }}
-          className="inline-flex w-full items-center justify-center rounded-full border border-black/10 bg-white px-4 py-3 text-sm font-semibold text-gray-900 transition hover:border-[#B21A15] hover:bg-[#B21A15] hover:text-white"
+          className="inline-flex w-full items-center justify-center rounded-full border border-black/10 bg-white px-4 py-3 text-sm font-semibold text-gray-900 transition hover:border-[#B21A15] hover:bg-[#B21A15] hover:text-white dark:border-white/10 dark:bg-white/6 dark:text-gray-100 dark:hover:border-[#ff8f82] dark:hover:bg-[#c53a2d]"
         >
           View Product
         </button>

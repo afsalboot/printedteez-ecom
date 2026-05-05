@@ -38,6 +38,7 @@ const CategoryManage = () => {
   );
 
   const [editingId, setEditingId] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -102,6 +103,13 @@ const CategoryManage = () => {
   const resetForm = () => {
     setEditingId("");
     setForm(emptyForm);
+    setIsModalOpen(false);
+  };
+
+  const openCreateModal = () => {
+    setEditingId("");
+    setForm(emptyForm);
+    setIsModalOpen(true);
   };
 
   const handleSubmit = async (e) => {
@@ -132,6 +140,7 @@ const CategoryManage = () => {
       isActive: category.isActive !== false,
       image: null,
     });
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (category) => {
@@ -243,175 +252,7 @@ const CategoryManage = () => {
         </section>
 
         <div className="grid gap-6 xl:grid-cols-[390px_1fr]">
-          <form
-            onSubmit={handleSubmit}
-            className="overflow-hidden rounded-[32px] border border-red-100 bg-white shadow-sm"
-          >
-            <div className="border-b border-red-100 bg-[linear-gradient(180deg,rgba(254,242,242,0.95),rgba(255,255,255,1))] p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.28em] text-red-500">
-                    Editor
-                  </p>
-                  <h2 className="mt-2 text-2xl font-semibold text-gray-900">
-                    {editingId ? "Refine category" : "Create category"}
-                  </h2>
-                  <p className="mt-2 text-sm text-gray-600">
-                    Give each collection a sharp name, a hero image, and a clear
-                    display order.
-                  </p>
-                </div>
-
-                {editingId ? (
-                  <button
-                    type="button"
-                    onClick={resetForm}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-red-100 text-gray-500 transition hover:bg-red-50"
-                    aria-label="Close edit mode"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="space-y-5 p-5">
-              <div className="overflow-hidden rounded-[28px] border border-dashed border-red-200 bg-red-50/60">
-                <div className="aspect-[4/3] overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(254,202,202,0.7),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.85),rgba(254,242,242,1))]">
-                  {previewUrl ? (
-                    <img
-                      src={previewUrl}
-                      alt={form.name || selectedCategory?.name || "Category preview"}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-red-500 shadow-sm">
-                        <FolderKanban className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900">
-                          Visual preview
-                        </p>
-                        <p className="mt-1 text-xs leading-5 text-gray-500">
-                          Upload artwork to preview how this category tile will feel.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium text-gray-700">
-                  Category name
-                </label>
-                <input
-                  className="input h-12 w-full rounded-2xl border border-red-100 bg-red-50/50 px-4 text-sm"
-                  value={form.name}
-                  onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
-                  placeholder="E.g. Oversized Tees"
-                />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-gray-700">
-                    Display order
-                  </label>
-                  <input
-                    type="number"
-                    className="input h-12 w-full rounded-2xl border border-red-100 bg-red-50/50 px-4 text-sm"
-                    value={form.order}
-                    onChange={(e) => setForm((prev) => ({ ...prev, order: e.target.value }))}
-                    placeholder="0"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-gray-700">
-                    Cover image
-                  </label>
-                  <label className="flex h-12 cursor-pointer items-center gap-3 rounded-2xl border border-red-100 bg-red-50/50 px-4 text-sm text-gray-600 transition hover:bg-red-50">
-                    <ImagePlus className="h-4 w-4 text-red-500" />
-                    <span className="truncate">
-                      {form.image ? form.image.name : "Choose image"}
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) =>
-                        setForm((prev) => ({
-                          ...prev,
-                          image: e.target.files?.[0] || null,
-                        }))
-                      }
-                    />
-                  </label>
-                </div>
-              </div>
-
-              <label className="flex items-center justify-between gap-4 rounded-2xl border border-red-100 bg-white p-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">
-                    Active on storefront
-                  </p>
-                  <p className="mt-1 text-xs text-gray-500">
-                    Hidden categories stay in admin tools but disappear from shoppers.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
-                  }
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition ${
-                    form.isActive ? "bg-red-600" : "bg-gray-300"
-                  }`}
-                  aria-pressed={form.isActive}
-                >
-                  <span
-                    className={`inline-block h-6 w-6 rounded-full bg-white shadow-sm transition ${
-                      form.isActive ? "translate-x-7" : "translate-x-1"
-                    }`}
-                  />
-                </button>
-              </label>
-
-              <div className="flex flex-wrap gap-3 pt-1">
-                <button
-                  className="inline-flex items-center gap-2 rounded-2xl bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700"
-                >
-                  {editingId ? (
-                    <PencilLine className="h-4 w-4" />
-                  ) : (
-                    <Plus className="h-4 w-4" />
-                  )}
-                  <span>
-                    {loading
-                      ? "Saving..."
-                      : editingId
-                      ? "Update Category"
-                      : "Create Category"}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="rounded-2xl border border-red-100 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-red-50"
-                >
-                  Reset
-                </button>
-              </div>
-
-              {error ? <p className="text-sm text-red-600">{error}</p> : null}
-            </div>
-          </form>
-
-          <section className="rounded-[32px] border border-red-100 bg-white p-5 shadow-sm">
+          <section className="rounded-[32px] border border-red-100 bg-white p-4 shadow-sm sm:p-5 xl:col-span-2">
             <div className="flex flex-col gap-4 border-b border-red-100 pb-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <p className="text-xs uppercase tracking-[0.28em] text-red-500">
@@ -425,7 +266,17 @@ const CategoryManage = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={openCreateModal}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-red-700 sm:w-auto"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Create Category</span>
+                </button>
+
+                <div className="flex flex-col gap-3 sm:flex-row">
                 <div className="relative">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <input
@@ -456,6 +307,7 @@ const CategoryManage = () => {
                     </button>
                   ))}
                 </div>
+                </div>
               </div>
             </div>
 
@@ -483,7 +335,7 @@ const CategoryManage = () => {
                 </p>
               </div>
             ) : (
-              <div className="mt-6 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
                 {filteredCategories.map((category) => {
                   const isEditing = editingId === category._id;
 
@@ -582,6 +434,181 @@ const CategoryManage = () => {
             )}
           </section>
         </div>
+
+        {isModalOpen ? (
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/45 p-0 sm:items-center sm:p-4">
+            <div className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[32px] border border-red-100 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] sm:rounded-[32px]">
+              <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+                <div className="border-b border-red-100 bg-[linear-gradient(180deg,rgba(254,242,242,0.95),rgba(255,255,255,1))] p-4 sm:p-5">
+                  <div className="mb-3 flex justify-center sm:hidden">
+                    <span className="h-1.5 w-14 rounded-full bg-red-200" />
+                  </div>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.28em] text-red-500">
+                        Editor
+                      </p>
+                      <h2 className="mt-2 text-xl font-semibold text-gray-900 sm:text-2xl">
+                        {editingId ? "Edit category" : "Create category"}
+                      </h2>
+                      <p className="mt-2 text-sm text-gray-600">
+                        Give each collection a sharp name, a hero image, and a clear
+                        display order.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-red-100 text-gray-500 transition hover:bg-red-50"
+                      aria-label="Close category modal"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4 sm:p-5">
+                  <div className="overflow-hidden rounded-[28px] border border-dashed border-red-200 bg-red-50/60">
+                    <div className="aspect-[4/3] overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(254,202,202,0.7),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.85),rgba(254,242,242,1))]">
+                      {previewUrl ? (
+                        <img
+                          src={previewUrl}
+                          alt={form.name || selectedCategory?.name || "Category preview"}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-red-500 shadow-sm">
+                            <FolderKanban className="h-6 w-6" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900">
+                              Visual preview
+                            </p>
+                            <p className="mt-1 text-xs leading-5 text-gray-500">
+                              Upload artwork to preview how this category tile will feel.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-medium text-gray-700">
+                      Category name
+                    </label>
+                    <input
+                      className="input h-12 w-full rounded-2xl border border-red-100 bg-red-50/50 px-4 text-sm"
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, name: e.target.value }))
+                      }
+                      placeholder="E.g. Oversized Tees"
+                    />
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-gray-700">
+                        Display order
+                      </label>
+                      <input
+                        type="number"
+                        className="input h-12 w-full rounded-2xl border border-red-100 bg-red-50/50 px-4 text-sm"
+                        value={form.order}
+                        onChange={(e) =>
+                          setForm((prev) => ({ ...prev, order: e.target.value }))
+                        }
+                        placeholder="0"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-medium text-gray-700">
+                        Cover image
+                      </label>
+                      <label className="flex h-12 cursor-pointer items-center gap-3 rounded-2xl border border-red-100 bg-red-50/50 px-4 text-sm text-gray-600 transition hover:bg-red-50">
+                        <ImagePlus className="h-4 w-4 text-red-500" />
+                        <span className="truncate">
+                          {form.image ? form.image.name : "Choose image"}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              image: e.target.files?.[0] || null,
+                            }))
+                          }
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <label className="flex items-center justify-between gap-4 rounded-2xl border border-red-100 bg-white p-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        Active on storefront
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Hidden categories stay in admin tools but disappear from shoppers.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
+                      }
+                      className={`relative inline-flex h-8 w-14 items-center rounded-full transition ${
+                        form.isActive ? "bg-red-600" : "bg-gray-300"
+                      }`}
+                      aria-pressed={form.isActive}
+                    >
+                      <span
+                        className={`inline-block h-6 w-6 rounded-full bg-white shadow-sm transition ${
+                          form.isActive ? "translate-x-7" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </label>
+
+                  {error ? <p className="text-sm text-red-600">{error}</p> : null}
+                </div>
+
+                <div className="border-t border-red-100 bg-white p-4 sm:p-5">
+                  <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="rounded-2xl border border-red-100 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-red-50"
+                    >
+                      Cancel
+                    </button>
+                    <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700">
+                      {editingId ? (
+                        <PencilLine className="h-4 w-4" />
+                      ) : (
+                        <Plus className="h-4 w-4" />
+                      )}
+                      <span>
+                        {loading
+                          ? "Saving..."
+                          : editingId
+                          ? "Update Category"
+                          : "Create Category"}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

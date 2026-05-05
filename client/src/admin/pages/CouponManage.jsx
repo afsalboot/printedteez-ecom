@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 const cardClass =
-  "rounded-[1.8rem] border border-white/60 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm";
+  "rounded-[1.8rem] border border-white/60 bg-white/95 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6";
 
 const CouponManage = () => {
   const dispatch = useDispatch();
@@ -113,7 +113,7 @@ const CouponManage = () => {
   };
 
   return (
-    <div className="rounded-[32px] border border-red-100/70 bg-white/80 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+    <div className="rounded-[28px] border border-red-100/70 bg-white/80 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:rounded-[32px] sm:p-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -130,7 +130,7 @@ const CouponManage = () => {
 
           <button
             onClick={() => navigate("/admin/coupons/create")}
-            className="inline-flex items-center gap-2 rounded-full bg-[#B21A15] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#97150f]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#B21A15] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#97150f] sm:w-auto"
           >
             <BadgePlus className="h-4 w-4" />
             Create Coupon
@@ -196,7 +196,7 @@ const CouponManage = () => {
               <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Sort
               </label>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <button
                   onClick={() => toggleSort("code")}
                   className={`flex-1 rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
@@ -231,7 +231,7 @@ const CouponManage = () => {
         </div>
 
         <div className={`${cardClass} overflow-hidden p-0`}>
-          <div className="flex flex-col gap-3 border-b border-slate-100 px-6 py-5 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-lg font-semibold text-slate-950">Coupon Library</h2>
               <p className="mt-1 text-sm text-slate-500">
@@ -252,7 +252,7 @@ const CouponManage = () => {
               {paginated.map((c) => (
                 <div
                   key={c._id}
-                  className="grid gap-4 px-6 py-5 transition hover:bg-[#fcfaf7] lg:grid-cols-[minmax(0,1.2fr)_180px_160px_220px]"
+                  className="grid gap-4 px-4 py-5 transition hover:bg-[#fcfaf7] sm:px-6 lg:grid-cols-[minmax(0,1.2fr)_180px_160px_220px]"
                 >
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">

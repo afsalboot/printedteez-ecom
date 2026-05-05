@@ -9,6 +9,20 @@ const isEmailVerificationRequired = () =>
   String(process.env.REQUIRE_EMAIL_VERIFICATION || "false").toLowerCase() ===
   "true";
 
+const isArgonHash = (value = "") => /^\$argon2(id|i|d)\$/.test(String(value));
+
+const verifyPassword = async (storedPassword, plainPassword) => {
+  if (!storedPassword || !plainPassword) return false;
+  if (!isArgonHash(storedPassword)) return false;
+
+  try {
+    return await argon2.verify(storedPassword, plainPassword);
+  } catch (error) {
+    console.error("Password verify error:", error.message);
+    return false;
+  }
+};
+
 // SIGNUP
 const registerUser = async (req, res) => {
   try {
@@ -132,7 +146,7 @@ const loginUser = async (req, res) => {
     const user = await User.findOne(query).select("+password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    const valid = await argon2.verify(user.password, password);
+    const valid = await verifyPassword(user.password, password);
     if (!valid) return res.status(401).json({ message: "Invalid password" });
 
     if (isEmailVerificationRequired() && !user.verified) {

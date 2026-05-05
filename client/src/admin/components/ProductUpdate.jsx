@@ -22,7 +22,7 @@ const getNextSize = (current) => {
 };
 
 const cardClass =
-  "rounded-[1.8rem] border border-white/60 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm";
+  "rounded-[1.8rem] border border-white/60 bg-white/95 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:p-6";
 const labelClass = "text-sm font-semibold text-slate-800";
 const helperClass = "text-xs leading-5 text-slate-500";
 const inputClass =
@@ -391,7 +391,7 @@ const ProductUpdate = () => {
 
   if (!form) {
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-5 text-slate-900">
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-3 text-slate-900 sm:p-5">
         <div className="mx-auto max-w-7xl rounded-[1.8rem] border border-white/60 bg-white/95 p-8 text-center shadow-[0_18px_40px_rgba(15,23,42,0.06)]">
           Loading...
         </div>
@@ -415,7 +415,7 @@ const ProductUpdate = () => {
   const uploadedGalleryCount = existingImages.filter(Boolean).length + newImages.filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-5 text-slate-900">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(178,26,21,0.08),_transparent_28%),linear-gradient(180deg,_#f8f4ef_0%,_#f1ebe4_100%)] p-3 text-slate-900 sm:p-5">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -1082,7 +1082,7 @@ const ProductUpdate = () => {
                     <p className={`${labelClass} mb-2`}>
                       Add / Replace Color Images
                     </p>
-                    <div className="grid grid-cols-5 gap-3">
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
                       {newColorImages[colorIndex].map((img, idx) => (
                         <label
                           key={idx}

@@ -246,7 +246,7 @@ const OrderManage = () => {
   };
 
   return (
-    <div className="rounded-[32px] border border-red-100/70 bg-white/80 p-6 text-gray-900 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm">
+    <div className="rounded-[28px] border border-red-100/70 bg-white/80 p-4 text-gray-900 shadow-[0_24px_80px_rgba(15,23,42,0.06)] backdrop-blur-sm sm:rounded-[32px] sm:p-6">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <p className="text-xs uppercase tracking-wide text-red-500">
@@ -262,7 +262,7 @@ const OrderManage = () => {
         <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
           <div className="space-y-4">
             <div className="rounded-[28px] border border-red-100 bg-white p-5 shadow-sm">
-              <div className="grid gap-3 md:grid-cols-[1.5fr_0.9fr_auto_auto] md:items-end">
+              <div className="grid gap-3 lg:grid-cols-[1.5fr_0.9fr_auto_auto] lg:items-end">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-gray-600">
                     Search
@@ -494,7 +494,7 @@ const OrderManage = () => {
             </div>
 
             {filtered.length > 0 && (
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
                   disabled={page === 1}
@@ -550,7 +550,7 @@ const OrderManage = () => {
                     </p>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
                     <button
                       type="button"
                       onClick={() =>
@@ -625,7 +625,7 @@ const OrderManage = () => {
                 </div>
 
                 <div className="rounded-[24px] border border-red-100 bg-white p-4">
-                  <div className="mb-3 flex items-center justify-between">
+                  <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="text-sm font-semibold text-gray-900">
                       Payment & totals
                     </h3>
@@ -729,7 +729,7 @@ const OrderManage = () => {
                       className="rounded-2xl border border-red-100 px-3 py-3 text-sm"
                     />
                   </div>
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                  <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                     {selectedAdminOrder.tracking?.trackingUrl ? (
                       <a
                         href={selectedAdminOrder.tracking.trackingUrl}

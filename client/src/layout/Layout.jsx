@@ -36,7 +36,7 @@ const Layout = () => {
   }, [dispatch, error, items.length, loaded, loading, message, token]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen flex-col bg-white text-gray-900 transition-colors dark:bg-[#0b0d12] dark:text-gray-100">
       <div className="sticky top-0 z-50">
         <LiveOffers />
         <Navbar />

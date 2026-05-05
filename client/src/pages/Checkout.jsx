@@ -243,36 +243,36 @@ const Checkout = () => {
   });
 
   return (
-    <div className="bg-[#f7f3ee] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <div className="bg-[#f7f3ee] px-3 py-6 text-gray-900 dark:bg-transparent dark:text-gray-100 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#B21A15]">
               Checkout
             </p>
-            <h1 className="mt-2 text-3xl font-semibold text-gray-950 sm:text-4xl">
+            <h1 className="mt-2 text-3xl font-semibold text-gray-950 dark:text-white sm:text-4xl">
               Shipping, payment, and review
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-600">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-300 sm:leading-7">
               A cleaner checkout flow with saved addresses, coupon support, and secure payment confirmation.
             </p>
           </div>
-          <div className="inline-flex items-center gap-3 rounded-full border border-black/10 bg-white px-5 py-3 text-sm text-gray-700 shadow-sm">
+          <div className="inline-flex items-center gap-3 self-start rounded-full border border-black/10 bg-white px-4 py-3 text-sm text-gray-700 shadow-sm dark:border-white/10 dark:bg-white/6 dark:text-gray-200 sm:px-5">
             <ShoppingBag className="h-4 w-4 text-[#B21A15]" />
             {totals.totalQty} item{totals.totalQty > 1 ? "s" : ""} ready
           </div>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
           <section className="space-y-6">
-            <div className="rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-7">
+            <div className="rounded-[1.8rem] border border-black/5 bg-white p-5 shadow-sm dark:border-white/8 dark:bg-[rgba(20,24,31,0.92)] dark:shadow-[0_22px_44px_rgba(0,0,0,0.3)] sm:rounded-[2rem] sm:p-7">
               <div className="mb-5 flex items-start gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15] dark:bg-[#2a2022]">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-950">Delivery address</h2>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <h2 className="text-xl font-semibold text-gray-950 dark:text-white">Delivery address</h2>
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     Choose a saved address or enter a new one for this order.
                   </p>
                 </div>
@@ -280,8 +280,8 @@ const Checkout = () => {
 
               {savedAddresses.length > 0 && (
                 <div className="mb-6 space-y-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm font-medium text-gray-800">Saved addresses</p>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200">Saved addresses</p>
                     <button
                       type="button"
                       onClick={() => navigate("/profile")}
@@ -298,12 +298,12 @@ const Checkout = () => {
                         onClick={() => handleSavedAddressSelect(address)}
                         className={`rounded-[1.4rem] border p-4 text-left transition ${
                           selectedSavedAddressId === address._id
-                            ? "border-[#B21A15] bg-[#fff4f2]"
-                            : "border-black/10 hover:border-black/20"
+                            ? "border-[#B21A15] bg-[#fff4f2] dark:bg-[#341d20]"
+                            : "border-black/10 hover:border-black/20 dark:border-white/10 dark:hover:border-white/20"
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-3">
-                          <p className="font-semibold text-gray-900">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p className="font-semibold text-gray-900 dark:text-white">
                             {address.label || "Address"}
                           </p>
                           {address.isDefault ? (
@@ -312,11 +312,11 @@ const Checkout = () => {
                             </span>
                           ) : null}
                         </div>
-                        <p className="mt-3 text-sm font-medium text-gray-800">
+                        <p className="mt-3 text-sm font-medium text-gray-800 dark:text-gray-200">
                           {address.fullName}
                         </p>
-                        <p className="mt-1 text-xs text-gray-500">{address.phone}</p>
-                        <p className="mt-2 text-xs leading-5 text-gray-500">
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{address.phone}</p>
+                        <p className="mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400">
                           {[address.line1, address.city, address.state, address.postalCode]
                             .filter(Boolean)
                             .join(", ")}
@@ -330,7 +330,7 @@ const Checkout = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-800">
+                    <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                       Full Name
                     </label>
                     <input
@@ -339,11 +339,11 @@ const Checkout = () => {
                       value={shipping.fullName}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-800">
+                    <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                       Phone
                     </label>
                     <input
@@ -352,13 +352,13 @@ const Checkout = () => {
                       value={shipping.phone}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                       className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-800">
+                   <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                     Address
                   </label>
                   <textarea
@@ -367,13 +367,13 @@ const Checkout = () => {
                     value={shipping.address}
                     onChange={handleChange}
                     required
-                    className="w-full resize-none rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                     className="w-full resize-none rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                   />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-800">
+                     <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                       City
                     </label>
                     <input
@@ -381,11 +381,11 @@ const Checkout = () => {
                       name="city"
                       value={shipping.city}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                       className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-800">
+                     <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                       State
                     </label>
                     <input
@@ -393,14 +393,14 @@ const Checkout = () => {
                       name="state"
                       value={shipping.state}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                       className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                     />
                   </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-800">
+                     <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                       Postal Code
                     </label>
                     <input
@@ -408,11 +408,11 @@ const Checkout = () => {
                       name="postalCode"
                       value={shipping.postalCode}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                       className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-800">
+                     <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-200">
                       Country
                     </label>
                     <input
@@ -420,19 +420,19 @@ const Checkout = () => {
                       name="country"
                       value={shipping.country}
                       onChange={handleChange}
-                      className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25"
+                       className="w-full rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                     />
                   </div>
                 </div>
 
-                <div className="border-t border-black/5 pt-5">
+                <div className="border-t border-black/5 pt-5 dark:border-white/8">
                   <div className="mb-4 flex items-start gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15]">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15] dark:bg-[#2a2022]">
                       <CreditCard className="h-5 w-5" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold text-gray-950">Payment method</h2>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <h2 className="text-xl font-semibold text-gray-950 dark:text-white">Payment method</h2>
+                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         Choose how you want to complete this order.
                       </p>
                     </div>
@@ -444,12 +444,12 @@ const Checkout = () => {
                       onClick={() => setPaymentMethod("cod")}
                       className={`rounded-[1.5rem] border p-4 text-left transition ${
                         paymentMethod === "cod"
-                          ? "border-black bg-black text-white"
-                          : "border-black/10 bg-[#fcfaf7] text-gray-900 hover:border-black/20"
+                          ? "border-black bg-black text-white dark:border-[#c53a2d] dark:bg-[#c53a2d]"
+                          : "border-black/10 bg-[#fcfaf7] text-gray-900 hover:border-black/20 dark:border-white/10 dark:bg-white/6 dark:text-gray-100 dark:hover:border-white/20"
                       }`}
                     >
                       <p className="text-sm font-semibold">Cash on Delivery</p>
-                      <p className={`mt-2 text-xs ${paymentMethod === "cod" ? "text-white/70" : "text-gray-500"}`}>
+                      <p className={`mt-2 text-xs ${paymentMethod === "cod" ? "text-white/70" : "text-gray-500 dark:text-gray-400"}`}>
                         Pay when your order arrives.
                       </p>
                     </button>
@@ -459,12 +459,12 @@ const Checkout = () => {
                       onClick={() => setPaymentMethod("card")}
                       className={`rounded-[1.5rem] border p-4 text-left transition ${
                         paymentMethod === "card"
-                          ? "border-black bg-black text-white"
-                          : "border-black/10 bg-[#fcfaf7] text-gray-900 hover:border-black/20"
+                          ? "border-black bg-black text-white dark:border-[#c53a2d] dark:bg-[#c53a2d]"
+                          : "border-black/10 bg-[#fcfaf7] text-gray-900 hover:border-black/20 dark:border-white/10 dark:bg-white/6 dark:text-gray-100 dark:hover:border-white/20"
                       } ${!stripeEnabled ? "cursor-not-allowed opacity-60" : ""}`}
                     >
                       <p className="text-sm font-semibold">Card / UPI</p>
-                      <p className={`mt-2 text-xs ${paymentMethod === "card" ? "text-white/70" : "text-gray-500"}`}>
+                      <p className={`mt-2 text-xs ${paymentMethod === "card" ? "text-white/70" : "text-gray-500 dark:text-gray-400"}`}>
                         {stripeEnabled
                           ? "Secure online payment with Stripe."
                           : "Stripe is not configured yet."}
@@ -481,12 +481,12 @@ const Checkout = () => {
                   <button
                     type="submit"
                     disabled={orderLoading}
-                    className="inline-flex min-w-[240px] items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60"
+                    className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60 dark:bg-[#c53a2d] dark:shadow-[0_14px_30px_rgba(197,58,45,0.24)] dark:hover:bg-[#d44739] sm:min-w-[240px] sm:w-auto"
                   >
                     {orderLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     {paymentMethod === "cod" ? "Place COD Order" : "Proceed to Payment"}
                   </button>
-                  <p className="mt-3 text-[11px] text-gray-500">
+                  <p className="mt-3 text-[11px] text-gray-500 dark:text-gray-400">
                     By continuing, you agree to the store's checkout and delivery terms.
                   </p>
                 </div>
@@ -495,11 +495,11 @@ const Checkout = () => {
           </section>
 
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-7">
+            <div className="rounded-[1.8rem] border border-black/5 bg-white p-5 shadow-sm dark:border-white/8 dark:bg-[rgba(20,24,31,0.94)] dark:shadow-[0_22px_44px_rgba(0,0,0,0.3)] sm:rounded-[2rem] sm:p-7">
               <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#B21A15]">
                 Order Summary
               </p>
-              <h2 className="mt-2 text-2xl font-semibold text-gray-950">
+              <h2 className="mt-2 text-2xl font-semibold text-gray-950 dark:text-white">
                 Review before payment
               </h2>
 
@@ -513,26 +513,28 @@ const Checkout = () => {
                         item._id ||
                         `${item.productId?._id || item.productId}-${item.size}-${item.color}`
                       }
-                      className="flex items-center gap-3 rounded-[1.4rem] bg-[#faf6f1] p-3"
+                      className="flex items-start gap-3 rounded-[1.4rem] bg-[#faf6f1] p-3 dark:bg-white/4"
                     >
                       {item.image ? (
-                        <img
-                          src={item.image}
-                          alt={name}
-                          className="h-14 w-14 rounded-xl object-cover"
-                        />
+                        <div className="shrink-0 overflow-hidden rounded-[1rem] bg-white dark:bg-[#1c222b]">
+                          <img
+                            src={item.image}
+                            alt={name}
+                            className="h-16 w-14 object-cover object-center sm:h-14 sm:w-14"
+                          />
+                        </div>
                       ) : null}
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold text-gray-900">
+                          <p className="line-clamp-2 text-sm font-semibold leading-snug text-gray-900 dark:text-white">
                           {name}
                         </p>
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                           Qty {item.qty || 1}
                           {item.size ? ` · ${item.size}` : ""}
                           {item.color ? ` · ${item.color}` : ""}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold text-gray-950">
+                      <p className="shrink-0 pt-0.5 text-sm font-semibold text-gray-950 dark:text-white">
                         {formatCurrency((item.price || 0) * (item.qty || 1))}
                       </p>
                     </div>
@@ -540,12 +542,12 @@ const Checkout = () => {
                 })}
               </div>
 
-              <div className="mt-5 space-y-3 border-t border-black/5 pt-5 text-sm">
-                <div className="flex items-center justify-between text-gray-600">
+              <div className="mt-5 space-y-3 border-t border-black/5 pt-5 text-sm dark:border-white/8">
+                <div className="flex items-center justify-between text-gray-600 dark:text-gray-300">
                   <span>Subtotal</span>
                   <span>{formatCurrency(totals.subtotal)}</span>
                 </div>
-                <div className="flex items-center justify-between text-gray-600">
+                <div className="flex items-center justify-between text-gray-600 dark:text-gray-300">
                   <span>Items</span>
                   <span>{totals.totalQty}</span>
                 </div>
@@ -555,39 +557,39 @@ const Checkout = () => {
                     <span>- {formatCurrency(totals.couponOff)}</span>
                   </div>
                 ) : null}
-                <div className="flex items-center justify-between border-t border-black/5 pt-3 text-base font-semibold text-gray-950">
+                <div className="flex items-center justify-between border-t border-black/5 pt-3 text-base font-semibold text-gray-950 dark:border-white/8 dark:text-white">
                   <span>Grand Total</span>
                   <span>{formatCurrency(totals.grandTotal)}</span>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-7">
+            <div className="rounded-[1.8rem] border border-black/5 bg-white p-5 shadow-sm dark:border-white/8 dark:bg-[rgba(20,24,31,0.94)] dark:shadow-[0_22px_44px_rgba(0,0,0,0.3)] sm:rounded-[2rem] sm:p-7">
               <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15]">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15] dark:bg-[#2a2022]">
                   <TicketPercent className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-950">Coupons</h2>
-                  <p className="mt-1 text-sm text-gray-500">
+                   <h2 className="text-xl font-semibold text-gray-950 dark:text-white">Coupons</h2>
+                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     Apply a code or choose an eligible offer for this cart.
                   </p>
                 </div>
               </div>
 
-              <div className="mt-5 flex gap-2">
+              <div className="mt-5 grid gap-2 sm:flex">
                 <input
                   type="text"
                   placeholder="Enter coupon code"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value)}
-                  className="min-w-0 flex-1 rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm uppercase outline-none transition focus:border-black/25"
+                   className="min-w-0 flex-1 rounded-2xl border border-black/10 bg-[#fcfaf7] px-4 py-3 text-sm uppercase outline-none transition focus:border-black/25 dark:border-white/10 dark:bg-white/6 dark:text-white dark:placeholder:text-gray-500"
                 />
                 <button
                   type="button"
                   onClick={handleApplyCoupon}
                   disabled={couponLoading || !couponCode.trim()}
-                  className="rounded-2xl bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60"
+                   className="min-h-12 rounded-2xl bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60 dark:bg-[#c53a2d] dark:hover:bg-[#d44739] sm:min-w-[110px]"
                 >
                   {couponLoading ? "Applying..." : "Apply"}
                 </button>
@@ -598,7 +600,7 @@ const Checkout = () => {
               ) : null}
 
               {couponCodeApplied ? (
-                <div className="mt-4 flex items-center justify-between rounded-[1.4rem] bg-emerald-50 px-4 py-3 text-sm">
+                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-[1.4rem] bg-emerald-50 px-4 py-3 text-sm dark:bg-emerald-950/25">
                   <div>
                     <p className="font-semibold uppercase text-emerald-700">
                       {couponCodeApplied}
@@ -621,7 +623,7 @@ const Checkout = () => {
 
               <div className="mt-5 space-y-2">
                 {eligibleOffers.length === 0 ? (
-                  <p className="text-sm text-gray-500">
+                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     No special offers are available for this cart value right now.
                   </p>
                 ) : (
@@ -630,18 +632,18 @@ const Checkout = () => {
                       key={offer._id || offer.code}
                       type="button"
                       onClick={() => handleSelectCoupon(offer)}
-                      className="w-full rounded-[1.4rem] border border-dashed border-black/10 px-4 py-3 text-left transition hover:border-black/25 hover:bg-[#faf6f1]"
+                       className="w-full rounded-[1.4rem] border border-dashed border-black/10 px-4 py-3 text-left transition hover:border-black/25 hover:bg-[#faf6f1] dark:border-white/10 dark:hover:border-white/20 dark:hover:bg-white/5"
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div>
-                          <p className="text-sm font-semibold uppercase text-gray-900">
+                           <p className="text-sm font-semibold uppercase text-gray-900 dark:text-white">
                             {offer.code}
                           </p>
-                          <p className="mt-1 text-xs text-gray-500">
+                           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                             {offer.description || "Tap to apply this offer"}
                           </p>
                         </div>
-                        <span className="rounded-full bg-[#f2ebe3] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#B21A15]">
+                         <span className="rounded-full bg-[#f2ebe3] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#B21A15] dark:bg-[#2a2022]">
                           Apply
                         </span>
                       </div>
@@ -652,14 +654,14 @@ const Checkout = () => {
             </div>
 
             {paymentMethod === "card" ? (
-              <div className="rounded-[2rem] border border-black/5 bg-white p-6 shadow-sm sm:p-7">
+               <div className="rounded-[1.8rem] border border-black/5 bg-white p-5 shadow-sm dark:border-white/8 dark:bg-[rgba(20,24,31,0.94)] dark:shadow-[0_22px_44px_rgba(0,0,0,0.3)] sm:rounded-[2rem] sm:p-7">
                 <div className="mb-4 flex items-start gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15]">
+                   <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f2ebe3] text-[#B21A15] dark:bg-[#2a2022]">
                     <ShieldCheck className="h-5 w-5" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-950">Secure payment</h2>
-                    <p className="mt-1 text-sm text-gray-500">
+                     <h2 className="text-xl font-semibold text-gray-950 dark:text-white">Secure payment</h2>
+                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                       Finish card or UPI payment after the order is initialized.
                     </p>
                   </div>
