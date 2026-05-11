@@ -4,19 +4,30 @@ import api from "../../api/axios";
 /* ----------------ASYNC ACTION---------------- */
 export const fetchSuggestions = (query) => async (dispatch) => {
   try {
-    if (!query.trim()) return dispatch(clearSuggestions());
+    const normalizedQuery = query.trim();
+    if (normalizedQuery.length < 2) return dispatch(clearSuggestions());
 
-    dispatch(searchStart());
+    dispatch(searchStart(normalizedQuery));
+
+    const cacheKey = normalizedQuery.toLowerCase();
+    const cached = suggestionCache[cacheKey];
+    if (cached) {
+      dispatch(searchSuccess({ query: normalizedQuery, suggestions: cached }));
+      return;
+    }
 
     const { data } = await api.get(
-      `/product/search?query=${encodeURIComponent(query)}`
+      `/product/search?query=${encodeURIComponent(normalizedQuery)}`
     );
 
-    dispatch(searchSuccess(data));
+    suggestionCache[cacheKey] = data || [];
+    dispatch(searchSuccess({ query: normalizedQuery, suggestions: data || [] }));
   } catch {
     dispatch(searchFail("Search failed"));
   }
 };
+
+const suggestionCache = {};
 
 /* ----------------SLICE---------------- */
 const searchSlice = createSlice({
@@ -25,21 +36,27 @@ const searchSlice = createSlice({
     suggestions: [],
     loading: false,
     error: null,
+    activeQuery: "",
   },
 
   reducers: {
-    searchStart: (state) => {
+    searchStart: (state, action) => {
       state.loading = true;
+      state.error = null;
+      state.activeQuery = action.payload || "";
     },
 
     searchSuccess: (state, action) => {
+      if (action.payload?.query !== state.activeQuery) return;
       state.loading = false;
-      state.suggestions = action.payload || [];
+      state.suggestions = action.payload?.suggestions || [];
       state.error = null;
     },
 
     clearSuggestions: (state) => {
+      state.loading = false;
       state.suggestions = [];
+      state.activeQuery = "";
     },
 
     searchFail: (state, action) => {

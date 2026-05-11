@@ -840,22 +840,26 @@ const suggestSKU = async (req, res) => {
 
 const searchProducts = async (req, res) => {
   try {
-    const query = req.query.query || "";
-    if (!query.trim()) return res.json([]);
+    const query = String(req.query.query || "").trim();
+    if (query.length < 2) return res.json([]);
 
-    const regex = new RegExp(query, "i");
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const startsWithRegex = new RegExp(`^${escapedQuery}`, "i");
+    const containsRegex = new RegExp(escapedQuery, "i");
 
     const products = await Product.find({
       $or: [
-        { title: { $regex: regex } },
-        { sku: { $regex: regex } },
-        { tags: { $regex: regex } },
-        { category: { $regex: regex } },
-        { collections: { $regex: regex } },
+        { title: { $regex: startsWithRegex } },
+        { sku: { $regex: startsWithRegex } },
+        { category: { $regex: containsRegex } },
+        { tags: { $regex: containsRegex } },
+        { collections: { $regex: containsRegex } },
       ],
     })
-      .limit(10)
-      .select("title sku images colors.images sizes discount");
+      .sort({ featured: -1, salesCount: -1, createdAt: -1 })
+      .limit(6)
+      .select("title sku images colors.images sizes discount")
+      .lean();
 
     // Shape response into lightweight suggestion objects
     const suggestions = products.map((p) => {

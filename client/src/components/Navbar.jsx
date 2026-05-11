@@ -8,7 +8,6 @@ import {
   UserIcon,
   X,
 } from "lucide-react";
-import { logo } from "../assets/assets.js";
 import { getCart } from "../redux/slices/cartSlice.jsx";
 import { fetchProfile } from "../redux/slices/userSlice.jsx";
 import {
@@ -53,14 +52,14 @@ const Navbar = () => {
   }, [token, dispatch]);
 
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    if (searchQuery.trim().length < 2) {
       dispatch(clearSuggestions());
       return;
     }
 
     const timeout = setTimeout(
       () => dispatch(fetchSuggestions(searchQuery)),
-      300
+      180
     );
 
     return () => clearTimeout(timeout);
@@ -107,11 +106,6 @@ const Navbar = () => {
           </button>
 
           <Link to="/" className="flex items-center gap-3">
-            <img
-              src={logo}
-              alt="PrintedTeez"
-              className="hidden h-11 w-auto object-contain sm:block"
-            />
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-[#B21A15]">
                 PrintedTeez
@@ -354,32 +348,6 @@ const Navbar = () => {
                 {item.label}
               </NavLink>
             ))}
-          </div>
-
-          <div className="relative mt-6 grid shrink-0 grid-cols-2 gap-3 border-t border-black/5 pt-5 dark:border-white/8">
-            <Link
-              to="/cart"
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-2xl border border-white/55 bg-white/62 px-4 py-3 text-center text-sm font-medium text-gray-800 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-white/10 dark:bg-white/6 dark:text-gray-100"
-            >
-              Cart
-            </Link>
-            <Link
-              to={user ? "/profile" : "/login"}
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-2xl bg-[#B21A15] px-4 py-3 text-center text-sm font-semibold text-white"
-            >
-              {user ? "Profile" : "Login"}
-            </Link>
-          </div>
-
-          <div className="relative mt-6 shrink-0 rounded-[1.5rem] border border-white/40 bg-white/48 p-4 backdrop-blur-md">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B21A15]">
-              Quick Note
-            </p>
-            <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-              Swipe down or tap outside this panel to close the menu.
-            </p>
           </div>
 
           <div className="relative mt-6 shrink-0 pb-2">

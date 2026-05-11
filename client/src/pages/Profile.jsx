@@ -364,45 +364,54 @@ const Profile = () => {
   const displayInitial = displayName?.[0]?.toUpperCase() || "U";
 
   return (
-    <div className="min-h-screen bg-[#f6f2f2] p-4 text-gray-900 dark:bg-[#0d0d0d] dark:text-gray-100 md:p-8">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
-        <aside className="rounded-[28px] bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.06)] dark:bg-[#171717]">
-          <div className="text-center">
+    <div className="min-h-screen bg-[#f6f2f2] p-3 text-gray-900 dark:bg-[#0d0d0d] dark:text-gray-100 sm:p-4 md:p-8">
+      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-6">
+        <aside className="min-w-0 rounded-[28px] bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.06)] dark:bg-[#171717] sm:p-5 lg:p-6">
+          <div className="flex items-center gap-3 text-left lg:block lg:text-center">
             {sidebarAvatar ? (
               <img
                 src={sidebarAvatar}
                 alt="Profile"
-                className="mx-auto h-24 w-24 rounded-full object-cover shadow-md"
+                className="h-16 w-16 rounded-full object-cover shadow-md lg:mx-auto lg:h-24 lg:w-24"
               />
             ) : (
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#B21A15] text-3xl font-semibold text-white">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#B21A15] text-2xl font-semibold text-white lg:mx-auto lg:h-24 lg:w-24 lg:text-3xl">
                 {displayInitial}
               </div>
             )}
-            <h2 className="mt-4 text-xl font-semibold">
-              {displayName}
-            </h2>
-            <p className="mt-1 break-all text-sm text-gray-500">
-              {profile?.email || "No email"}
-            </p>
+            <div className="min-w-0 flex-1 lg:mt-4 lg:min-w-full">
+              <h2 className="truncate text-lg font-semibold lg:text-xl">
+                {displayName}
+              </h2>
+              <p className="mt-1 truncate text-sm text-gray-500 lg:break-all">
+                {profile?.email || "No email"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="hidden h-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-[#faf7f3] px-4 text-sm font-medium text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-white sm:inline-flex lg:hidden"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <div className="rounded-2xl bg-red-50 p-3 text-left dark:bg-[#211313]">
+          <div className="mt-4 grid grid-cols-2 gap-2.5 lg:mt-6 lg:gap-3">
+            <div className="rounded-[20px] bg-red-50 p-3 text-left dark:bg-[#211313]">
               <p className="text-xs uppercase tracking-wide text-gray-400">
                 Active orders
               </p>
-              <p className="mt-1 text-lg font-semibold">{activeOrdersCount}</p>
+              <p className="mt-1 text-base font-semibold lg:text-lg">{activeOrdersCount}</p>
             </div>
-            <div className="rounded-2xl bg-red-50 p-3 text-left dark:bg-[#211313]">
+            <div className="rounded-[20px] bg-red-50 p-3 text-left dark:bg-[#211313]">
               <p className="text-xs uppercase tracking-wide text-gray-400">
                 Addresses
               </p>
-              <p className="mt-1 text-lg font-semibold">{savedAddresses.length}</p>
+              <p className="mt-1 text-base font-semibold lg:text-lg">{savedAddresses.length}</p>
             </div>
           </div>
 
-          <nav className="mt-8 space-y-2">
+          <nav className="-mx-4 mt-5 flex max-w-full gap-2 overflow-x-auto overflow-y-hidden px-4 pb-1 sm:-mx-5 sm:px-5 lg:mx-0 lg:mt-8 lg:block lg:space-y-2 lg:overflow-visible lg:px-0 lg:pb-0">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -412,13 +421,13 @@ const Profile = () => {
                     dispatch(clearUserFeedback());
                     setActiveTab(tab.id);
                   }}
-                  className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${
+                  className={`flex shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-left text-sm font-medium transition lg:w-full lg:gap-3 lg:rounded-2xl lg:px-4 lg:py-3 lg:whitespace-normal ${
                     activeTab === tab.id
                       ? "bg-[#B21A15] text-white shadow-sm"
                       : "text-gray-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-[#222]"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 shrink-0" />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -427,18 +436,18 @@ const Profile = () => {
 
           <button
             onClick={handleLogout}
-            className="mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-gray-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-black"
+            className="mt-5 hidden w-full items-center justify-center gap-2 rounded-2xl bg-gray-900 px-4 py-3 text-sm font-medium text-white dark:bg-white dark:text-black lg:flex lg:mt-8"
           >
             <LogOut className="h-4 w-4" /> Logout
           </button>
         </aside>
 
-        <main className="rounded-[28px] bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.06)] dark:bg-[#171717]">
-          <div className="mb-6">
+        <main className="rounded-[28px] bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.06)] dark:bg-[#171717] sm:p-6">
+          <div className="mb-5 sm:mb-6">
             <p className="text-xs uppercase tracking-[0.3em] text-[#B21A15]">
               Account Center
             </p>
-            <h1 className="mt-2 text-3xl font-semibold">
+            <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">
               {tabs.find((tab) => tab.id === activeTab)?.label}
             </h1>
           </div>
@@ -456,29 +465,29 @@ const Profile = () => {
           )}
 
           {activeTab === "overview" && (
-            <div className="space-y-6">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-[24px] bg-red-50 p-5 dark:bg-[#211313]">
-                  <p className="text-sm text-gray-500">Total orders</p>
-                  <p className="mt-2 text-3xl font-semibold">{myOrders.length}</p>
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+                <div className="rounded-[22px] bg-red-50 p-4 dark:bg-[#211313]">
+                  <p className="text-xs uppercase tracking-[0.18em] text-gray-500">Total orders</p>
+                  <p className="mt-2 text-2xl font-semibold sm:text-3xl">{myOrders.length}</p>
                 </div>
-                <div className="rounded-[24px] bg-red-50 p-5 dark:bg-[#211313]">
-                  <p className="text-sm text-gray-500">Wishlist items</p>
-                  <p className="mt-2 text-3xl font-semibold">{wishlistItems.length}</p>
+                <div className="rounded-[22px] bg-red-50 p-4 dark:bg-[#211313]">
+                  <p className="text-xs uppercase tracking-[0.18em] text-gray-500">Wishlist items</p>
+                  <p className="mt-2 text-2xl font-semibold sm:text-3xl">{wishlistItems.length}</p>
                 </div>
-                <div className="rounded-[24px] bg-red-50 p-5 dark:bg-[#211313]">
-                  <p className="text-sm text-gray-500">Total spent</p>
-                  <p className="mt-2 text-3xl font-semibold">
+                <div className="col-span-2 rounded-[22px] bg-red-50 p-4 dark:bg-[#211313] sm:col-span-1">
+                  <p className="text-xs uppercase tracking-[0.18em] text-gray-500">Total spent</p>
+                  <p className="mt-2 text-2xl font-semibold sm:text-3xl">
                     {formatCurrency(totalSpent)}
                   </p>
                 </div>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="rounded-[24px] border border-red-100 p-5 dark:border-[#2a2a2a]">
+              <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr] lg:gap-4">
+                <div className="rounded-[24px] border border-red-100 p-4 dark:border-[#2a2a2a] sm:p-5">
                   <h2 className="text-lg font-semibold">Account summary</h2>
                   <div className="mt-4 space-y-3 text-sm">
-                    <div className="flex justify-between gap-4">
+                    <div className="flex items-start justify-between gap-4">
                       <span className="text-gray-500">Member since</span>
                       <span className="font-medium">
                         {profile?.createdAt
@@ -486,29 +495,29 @@ const Profile = () => {
                           : "-"}
                       </span>
                     </div>
-                    <div className="flex justify-between gap-4">
+                    <div className="flex items-start justify-between gap-4">
                       <span className="text-gray-500">Email</span>
-                      <span className="break-all font-medium">{profile?.email || "-"}</span>
+                      <span className="max-w-[58%] break-words text-right font-medium">{profile?.email || "-"}</span>
                     </div>
-                    <div className="flex justify-between gap-4">
+                    <div className="flex items-start justify-between gap-4">
                       <span className="text-gray-500">Mobile</span>
                       <span className="font-medium">{profile?.mobile || "-"}</span>
                     </div>
-                    <div className="flex justify-between gap-4">
+                    <div className="flex items-start justify-between gap-4">
                       <span className="text-gray-500">Saved addresses</span>
                       <span className="font-medium">{savedAddresses.length}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="rounded-[24px] border border-red-100 p-5 dark:border-[#2a2a2a]">
+                <div className="rounded-[24px] border border-red-100 p-4 dark:border-[#2a2a2a] sm:p-5">
                   <h2 className="text-lg font-semibold">Recent activity</h2>
                   {recentOrder ? (
-                    <div className="mt-4 rounded-2xl bg-red-50 p-4 dark:bg-[#211313]">
+                    <div className="mt-4 rounded-[20px] bg-red-50 p-4 dark:bg-[#211313]">
                       <p className="text-xs uppercase tracking-wide text-gray-400">
                         Latest order
                       </p>
-                      <p className="mt-2 font-mono text-sm">{recentOrder._id}</p>
+                      <p className="mt-2 line-clamp-2 break-all font-mono text-sm">{recentOrder._id}</p>
                       <p className="mt-2 text-sm text-gray-500">
                         {new Date(recentOrder.createdAt).toLocaleDateString()}
                       </p>

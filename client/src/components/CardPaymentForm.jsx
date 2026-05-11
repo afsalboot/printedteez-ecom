@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { LockKeyhole, Loader2 } from "lucide-react";
+import { LockKeyhole } from "lucide-react";
+import BrandLoader from "./BrandLoader";
 import { confirmOrder } from "../redux/slices/orderSlice";
 import { clearCart } from "../redux/slices/cartSlice";
 import { clearValidatedCoupon } from "../redux/slices/couponSlice";
@@ -115,8 +116,11 @@ const CardPaymentForm = () => {
         disabled={!stripe || submitting || loading}
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60"
       >
-        {submitting || loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-        {submitting || loading ? "Processing..." : "Pay Securely"}
+        {submitting || loading ? (
+          <BrandLoader size="sm" tone="dark" label="Processing" />
+        ) : (
+          "Pay Securely"
+        )}
       </button>
 
       <p className="text-[11px] leading-5 text-gray-500">

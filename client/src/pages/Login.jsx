@@ -36,43 +36,44 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-[#b40000] relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 opacity-30">
-        <div className="w-72 h-72 bg-white/30 rounded-full blur-3xl absolute -top-10 -left-10" />
-        <div className="w-72 h-72 bg-black/30 rounded-full blur-3xl absolute bottom-0 right-0" />
+        <div className="animate-login-float absolute -top-10 -left-10 h-72 w-72 rounded-full bg-white/30 blur-3xl" />
+        <div className="animate-login-drift absolute bottom-0 right-0 h-72 w-72 rounded-full bg-black/30 blur-3xl" />
+        <div className="animate-login-float absolute left-[12%] top-[22%] h-40 w-40 rounded-full bg-[#ffcfbf]/20 blur-3xl [animation-delay:1.1s]" />
       </div>
 
       <div className="relative min-h-screen max-w-6xl mx-auto px-4 sm:px-6 py-8 md:py-12 flex items-center">
         <div className="w-full grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center">
           <section className="hidden lg:block text-white">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/70 mb-5">
+            <p className="animate-login-reveal mb-5 text-xs uppercase tracking-[0.35em] text-white/70">
               PrintedTeez
             </p>
-            <h1 className="text-5xl xl:text-6xl font-semibold leading-tight">
+            <h1 className="animate-login-reveal-delay-1 text-5xl font-semibold leading-tight xl:text-6xl">
               Welcome back.
             </h1>
-            <p className="mt-5 max-w-md text-white/80 text-base leading-7">
+            <p className="animate-login-reveal-delay-2 mt-5 max-w-md text-base leading-7 text-white/80">
               Sign in to continue shopping, review your cart, and manage your
               orders from one place.
             </p>
           </section>
 
-          <section className="w-full max-w-xl lg:max-w-none mx-auto">
-            <div className="text-center lg:hidden mb-6">
-              <p className="text-xs uppercase tracking-[0.25em] text-white/80 mb-2">
+          <section className="animate-login-reveal-delay-2 mx-auto w-full max-w-xl lg:max-w-none">
+            <div className="mb-6 text-center lg:hidden">
+              <p className="animate-login-reveal mb-2 text-xs uppercase tracking-[0.25em] text-white/80">
                 PrintedTeez
               </p>
-              <h1 className="text-4xl font-semibold text-white">Login</h1>
-              <p className="text-sm text-white/80 mt-2">
+              <h1 className="animate-login-reveal-delay-1 text-4xl font-semibold text-white">Login</h1>
+              <p className="animate-login-reveal-delay-2 mt-2 text-sm text-white/80">
                 Welcome back! Sign in to continue shopping.
               </p>
             </div>
 
-            <div className="w-full bg-white/95 backdrop-blur-sm rounded-[28px] shadow-2xl px-6 sm:px-8 py-7 sm:py-8 border border-white/40">
-              <div className="hidden lg:block mb-7">
-                <p className="text-xs uppercase tracking-[0.25em] text-red-500/80 mb-2">
+            <div className="animate-login-reveal-delay-3 w-full rounded-[28px] border border-white/40 bg-white/95 px-6 py-7 shadow-2xl backdrop-blur-sm sm:px-8 sm:py-8">
+              <div className="mb-7 hidden lg:block">
+                <p className="animate-login-reveal mb-2 text-xs uppercase tracking-[0.25em] text-red-500/80">
                   PrintedTeez
                 </p>
-                <h2 className="text-4xl font-semibold text-[#7f0000]">Login</h2>
-                <p className="text-sm text-gray-500 mt-2">
+                <h2 className="animate-login-reveal-delay-1 text-4xl font-semibold text-[#7f0000]">Login</h2>
+                <p className="animate-login-reveal-delay-2 mt-2 text-sm text-gray-500">
                   Welcome back! Sign in to continue shopping.
                 </p>
               </div>
@@ -83,15 +84,21 @@ const Login = () => {
                 </p>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
+              <form onSubmit={handleSubmit} autoComplete="off" className="space-y-5">
+                <div className="animate-login-reveal-delay-1 space-y-2">
+                  <label htmlFor="login-email-or-phone" className="text-sm font-medium text-gray-700">
                     Email or Phone
                   </label>
                   <input
+                    id="login-email-or-phone"
                     name="emailOrMobile"
                     placeholder="Enter your email or phone"
                     autoComplete="off"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    data-lpignore="true"
+                    data-1p-ignore="true"
                     value={form.emailOrMobile}
                     onChange={handleChange}
                     className="w-full h-12 px-4 rounded-xl bg-[#efefef] text-red-700 placeholder-red-300 text-sm outline-none border border-transparent focus:border-red-200 focus:bg-white focus:ring-4 focus:ring-red-100/70 transition"
@@ -99,9 +106,9 @@ const Login = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="animate-login-reveal-delay-2 space-y-2">
                   <div className="flex items-center justify-between gap-3">
-                    <label className="text-sm font-medium text-gray-700">
+                    <label htmlFor="login-password" className="text-sm font-medium text-gray-700">
                       Password
                     </label>
                     <span className="text-xs text-red-700 cursor-pointer hover:underline">
@@ -109,9 +116,15 @@ const Login = () => {
                     </span>
                   </div>
                   <input
+                    id="login-password"
                     name="password"
                     type="password"
-                    autoComplete="off"
+                    autoComplete="new-password"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    data-lpignore="true"
+                    data-1p-ignore="true"
                     placeholder="Enter your password"
                     value={form.password}
                     onChange={handleChange}
@@ -122,13 +135,13 @@ const Login = () => {
 
                 <button
                   disabled={loading}
-                  className="mt-2 w-full sm:w-56 mx-auto block bg-white text-red-600 font-semibold py-3 rounded-xl text-lg shadow-md border border-red-100 hover:bg-red-50 disabled:opacity-70 disabled:cursor-not-allowed transition"
+                  className="animate-login-reveal-delay-3 mx-auto mt-2 block w-full rounded-xl border border-red-100 bg-white py-3 text-lg font-semibold text-red-600 shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-red-50 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70 sm:w-56"
                 >
                   {loading ? "Logging in..." : "Login"}
                 </button>
               </form>
 
-              <p className="text-center text-sm text-gray-600 mt-6">
+              <p className="animate-login-reveal-delay-3 mt-6 text-center text-sm text-gray-600">
                 Don’t have an account?{" "}
                 <Link to="/register" className="underline text-red-600 font-medium">
                   Sign up

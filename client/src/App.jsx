@@ -36,6 +36,7 @@ import Blog from "./components/Blog.jsx";
 import PaymentSuccess from "./components/PaymentSuccess.jsx";
 import MyOrders from "./components/MyOrders.jsx";
 import ThemeSync from "./ui/ThemeSync.jsx";
+import PageReveal from "./components/PageReveal.jsx";
 
 const App = () => {
   const darkMode = useSelector((state) => state.ui.darkMode);
@@ -51,6 +52,8 @@ const App = () => {
   const AdminProtected = ({ children }) => {
     return adminToken ? children : <Navigate to="/admin/login" replace />;
   };
+
+  const withReveal = (element) => <PageReveal>{element}</PageReveal>;
 
   return (
     <>
@@ -71,13 +74,13 @@ const App = () => {
         <Route path="/event" element={<Events />} />
       </Route>
 
-      <Route path="/register" element={<Signup />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/payment-success" element={<PaymentSuccess />} />
-      <Route path="/orders" element={<MyOrders />} />
+      <Route path="/register" element={withReveal(<Signup />)} />
+      <Route path="/login" element={withReveal(<Login />)} />
+      <Route path="/payment-success" element={withReveal(<PaymentSuccess />)} />
+      <Route path="/orders" element={withReveal(<MyOrders />)} />
 
       {/* ADMIN LOGIN */}
-      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/login" element={withReveal(<AdminLogin />)} />
 
       {/* ADMIN PROTECTED AREA */}
       <Route

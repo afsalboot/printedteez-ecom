@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminHeader from "../components/AdminHeader";
+import PageReveal from "../../components/PageReveal";
 
 const AdminLayout = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -34,7 +35,9 @@ const AdminLayout = () => {
 
         <div className="relative flex-1">
           <main className="mx-auto w-full max-w-[1600px] p-3 sm:p-4 md:p-6">
-            <Outlet />
+            <PageReveal>
+              <Outlet />
+            </PageReveal>
           </main>
         </div>
       </div>

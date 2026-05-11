@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../components/Navbar";
 import LiveOffers from "../components/LiveOffers";
 import Footer from "../components/Footer";
+import PageReveal from "../components/PageReveal";
 import { clearWishlist, getWishlist } from "../redux/slices/wishlistSlice";
 
 const Layout = () => {
@@ -43,7 +44,9 @@ const Layout = () => {
       </div>
       {/* Main content grows to fill space */}
       <main className="flex-1">
-        <Outlet />
+        <PageReveal>
+          <Outlet />
+        </PageReveal>
       </main>
       <Footer />
     </div>

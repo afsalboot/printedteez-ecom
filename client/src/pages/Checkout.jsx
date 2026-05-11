@@ -5,12 +5,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import {
   CreditCard,
-  Loader2,
   MapPin,
   ShieldCheck,
   ShoppingBag,
   TicketPercent,
 } from "lucide-react";
+import BrandLoader from "../components/BrandLoader";
 import { createOrder, resetOrderState } from "../redux/slices/orderSlice";
 import { clearCart } from "../redux/slices/cartSlice";
 import { fetchProfile, fetchSavedAddresses } from "../redux/slices/userSlice";
@@ -244,6 +244,15 @@ const Checkout = () => {
 
   return (
     <div className="bg-[#f7f3ee] px-3 py-6 text-gray-900 dark:bg-transparent dark:text-gray-100 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+      {orderLoading ? (
+        <BrandLoader
+          fullScreen
+          size="lg"
+          tone="dark"
+          label={paymentMethod === "cod" ? "Placing order" : "Preparing payment"}
+        />
+      ) : null}
+
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -483,8 +492,17 @@ const Checkout = () => {
                     disabled={orderLoading}
                     className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60 dark:bg-[#c53a2d] dark:shadow-[0_14px_30px_rgba(197,58,45,0.24)] dark:hover:bg-[#d44739] sm:min-w-[240px] sm:w-auto"
                   >
-                    {orderLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                    {paymentMethod === "cod" ? "Place COD Order" : "Proceed to Payment"}
+                    {orderLoading ? (
+                      <BrandLoader
+                        size="sm"
+                        tone="dark"
+                        label={paymentMethod === "cod" ? "Placing order" : "Preparing payment"}
+                      />
+                    ) : (
+                      <span>
+                        {paymentMethod === "cod" ? "Place COD Order" : "Proceed to Payment"}
+                      </span>
+                    )}
                   </button>
                   <p className="mt-3 text-[11px] text-gray-500 dark:text-gray-400">
                     By continuing, you agree to the store's checkout and delivery terms.
@@ -591,7 +609,11 @@ const Checkout = () => {
                   disabled={couponLoading || !couponCode.trim()}
                    className="min-h-12 rounded-2xl bg-black px-4 py-3 text-sm font-semibold text-white transition hover:bg-gray-900 disabled:opacity-60 dark:bg-[#c53a2d] dark:hover:bg-[#d44739] sm:min-w-[110px]"
                 >
-                  {couponLoading ? "Applying..." : "Apply"}
+                  {couponLoading ? (
+                    <BrandLoader size="sm" tone="dark" label="Applying" />
+                  ) : (
+                    "Apply"
+                  )}
                 </button>
               </div>
 

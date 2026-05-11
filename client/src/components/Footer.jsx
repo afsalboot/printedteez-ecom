@@ -9,7 +9,6 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
-import { logo } from "../assets/assets";
 
 const Footer = () => {
   return (
@@ -18,7 +17,6 @@ const Footer = () => {
         <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,_rgba(178,26,21,0.22),_rgba(255,255,255,0.02))] p-6 sm:p-8 dark:border-[#ff8f82]/14 dark:bg-[radial-gradient(circle_at_top_left,_rgba(197,58,45,0.22),_transparent_34%),linear-gradient(145deg,_rgba(31,26,32,0.96),_rgba(20,24,31,0.92))]">
             <div className="flex items-center gap-4">
-              <img src={logo} alt="PrintedTeez" className="h-12 w-auto" />
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#f3b2aa]">
                   PrintedTeez
